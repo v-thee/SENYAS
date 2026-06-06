@@ -1,12 +1,23 @@
+import { useState } from "react";
 import { senya_blue } from "./images";
 import BottomNav from "./BottomNav";
-import { AlphabetIcon, GreetingIcon, NumbersIcon, ClassroomIcon, CheckIcon, LockIcon, StarIcon, TrophyIcon } from "./icons";
+import {
+  AlphabetIcon, GreetingIcon, NumbersIcon, ClassroomIcon,
+  CheckIcon, LockIcon, StarIcon, TrophyIcon,
+} from "./icons";
 
 const lessons = [
-  { title: "FSL Alphabet", icon: "alpha", progress: 65, color: "#3B82F6", tag: "In Progress" },
-  { title: "Greetings", icon: "greet", progress: 100, color: "#10B981", tag: "Completed" },
-  { title: "Numbers 1–10", icon: "num", progress: 30, color: "#F59E0B", tag: "In Progress" },
-  { title: "Classroom Words", icon: "class", progress: 0, color: "#8B5CF6", tag: "Locked" },
+  { title: "FSL Alphabet",    icon: "alpha", progress: 65,  color: "#2563EB", tag: "In Progress" },
+  { title: "Greetings",       icon: "greet", progress: 100, color: "#2563EB", tag: "Completed"   },
+  { title: "Numbers 1–10",    icon: "num",   progress: 30,  color: "#2563EB", tag: "In Progress" },
+  { title: "Classroom Words", icon: "class", progress: 0,   color: "#6B7280", tag: "Locked"      },
+];
+
+const quickActions = [
+  { label: "Multiple Choice", icon: "mc",    color: "#2563EB", screen: "quizmc"       },
+  { label: "Drag & Drop",     icon: "dnd",   color: "#1D4ED8", screen: "quizdnd"      },
+  { label: "Gesture Cam",     icon: "cam",   color: "#0f3172", screen: "gesture"      },
+  { label: "My Badges",       icon: "badge", color: "#fbbf24", screen: "achievements" },
 ];
 
 function getGreeting() {
@@ -18,197 +29,363 @@ function getGreeting() {
 
 function LessonIcon({ icon, size = 22 }) {
   switch (icon) {
-    case "alpha": return <AlphabetIcon size={size} color="#3B82F6" />;
-    case "greet": return <GreetingIcon size={size} color="#10B981" />;
-    case "num": return <NumbersIcon size={size} />;
-    case "class": return <ClassroomIcon size={size} />;
-    default: return null;
+    case "alpha": return <AlphabetIcon  size={size} color="#2563EB" />;
+    case "greet": return <GreetingIcon  size={size} color="#2563EB" />;
+    case "num":   return <NumbersIcon   size={size} color="#2563EB" />;
+    case "class": return <ClassroomIcon size={size} color="#9CA3AF" />;
+    default:      return null;
   }
 }
 
-export default function Dashboard({ nav, user }) {
-  return (
-    <div className="screen" style={{ background: "#F9FAFB", paddingBottom: 80 }}>
-      {/* Header */}
-      <div style={{
-        background: "linear-gradient(135deg, #1D4ED8 0%, #3B82F6 100%)",
-        padding: "52px 24px 72px", position: "relative", overflow: "hidden"
-      }}>
-        <div style={{ position: "absolute", top: -40, right: -40, width: 180, height: 180,
-          borderRadius: "50%", background: "rgba(255,255,255,0.07)" }} />
-        <div style={{ position: "absolute", bottom: -20, left: -20, width: 120, height: 120,
-          borderRadius: "50%", background: "rgba(255,255,255,0.05)" }} />
-        <div style={{ position: "absolute", top: 60, right: 140, width: 60, height: 60,
-          borderRadius: "50%", background: "rgba(255,255,255,0.04)" }} />
+function QuickIcon({ icon, color }) {
+  if (icon === "mc") return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+      <rect x="3" y="3" width="18" height="18" rx="2" stroke={color} strokeWidth="2"/>
+      <path d="M9 12l2 2 4-4" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  );
+  if (icon === "dnd") return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill={color} opacity="0.9">
+      <rect x="3" y="3" width="8" height="8" rx="1"/>
+      <rect x="13" y="3" width="8" height="8" rx="1"/>
+      <rect x="3" y="13" width="8" height="8" rx="1"/>
+      <rect x="13" y="13" width="8" height="8" rx="1"/>
+    </svg>
+  );
+  if (icon === "cam") return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2">
+      <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/>
+      <circle cx="12" cy="13" r="3"/>
+    </svg>
+  );
+  if (icon === "badge") return <TrophyIcon size={22} color={color} />;
+  return null;
+}
 
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-          <div>
-            <p style={{ color: "rgba(255,255,255,0.75)", fontSize: 13, fontWeight: 600 }}>
-              {getGreeting()}
-            </p>
-            <h1 style={{ color: "#fff", fontFamily: "var(--font-head)",
-              fontSize: 26, fontWeight: 800, marginTop: 2 }}>
-              {user?.name || "Maria"}!
-            </h1>
-            <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 10, flexWrap: "wrap" }}>
-              <span style={{ background: "rgba(255,255,255,0.15)", borderRadius: 8,
-                padding: "4px 10px", fontSize: 12, fontWeight: 700, color: "#FFD93D", display: "flex", alignItems: "center", gap: 4 }}>
-                <StarIcon size={14} color="#FFD93D" /> Beginner
-              </span>
-              <span style={{ background: "rgba(255,255,255,0.15)", borderRadius: 8,
-                padding: "4px 10px", fontSize: 12, fontWeight: 700, color: "#fff", display: "flex", alignItems: "center", gap: 4 }}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="#fff"><path d="M12 2c1 2 2 4 2 7 0 3-1 6-3 8 1 2 2 4 2 6 0 4-2 6-2 6s-2-2-2-6c0-2 1-4 2-6-2-2-3-5-3-8 0-3 1-5 2-7z" /></svg>
-                {user?.streak || 5} day streak
-              </span>
-            </div>
+function PressableButton({ onClick, style, children, disabled }) {
+  const [pressed, setPressed] = useState(false);
+  return (
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      onMouseDown={() => setPressed(true)}
+      onMouseUp={() => setPressed(false)}
+      onMouseLeave={() => setPressed(false)}
+      onTouchStart={() => setPressed(true)}
+      onTouchEnd={() => setPressed(false)}
+      style={{
+        ...style,
+        transform: pressed ? "scale(0.97)" : "scale(1)",
+        transition: "transform 0.12s ease",
+      }}
+    >
+      {children}
+    </button>
+  );
+}
+
+function GlassCard({ children, style }) {
+  return (
+    <div style={{
+      background: "rgba(255,255,255,0.62)",
+      border: "1px solid rgba(255,255,255,0.85)",
+      borderRadius: 20,
+      backdropFilter: "blur(8px)",
+      boxShadow: "0 2px 12px rgba(15,49,114,0.09)",
+      ...style,
+    }}>
+      {children}
+    </div>
+  );
+}
+
+export default function Dashboard({ nav, user }) {
+  const xp    = user?.xp    || 340;
+  const xpMax = 500;
+  const xpPct = Math.min((xp / xpMax) * 100, 100);
+
+  return (
+    <div style={{
+      background: "linear-gradient(180deg,#a8d4f5 0%,#c5e3f7 25%,#daeefb 55%,#eaf5fd 80%,#f0f8ff 100%)",
+      minHeight: "100vh",
+      paddingBottom: 88,
+    }}>
+
+      {/* ── Top bar ── */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "52px 20px 12px" }}>
+        <span style={{ color: "#0f3172", fontSize: 22, fontWeight: 800, letterSpacing: 2 }}>SEÑAS</span>
+        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+          <button style={{ background: "none", border: "none", cursor: "pointer", color: "#4b7bbb" }}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="8" x2="12" y2="8" strokeWidth="3" strokeLinecap="round"/>
+              <line x1="12" y1="12" x2="12" y2="16" strokeWidth="2" strokeLinecap="round"/>
+            </svg>
+          </button>
+          <div style={{ background: "rgba(255,255,255,0.7)", borderRadius: 20, padding: "5px 12px", display: "flex", alignItems: "center", gap: 5, color: "#0f3172", fontSize: 13, fontWeight: 700, boxShadow: "0 1px 4px rgba(0,0,0,0.08)" }}>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="#fb923c">
+              <path d="M12 2c0 6-8 8-8 14a8 8 0 0016 0C20 10 12 8 12 2z"/>
+            </svg>
+            {user?.streak || 12}
           </div>
-          <img src={senya_blue} alt="Senya" style={{
-            width: 84, height: 84, objectFit: "contain",
-            filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.2))",
-            animation: "senya-bob 2.5s ease-in-out infinite",
-            cursor: "pointer"
-          }} onClick={() => nav("tutorial")} />
+          <button style={{ background: "none", border: "none", cursor: "pointer", color: "#4b7bbb" }}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+              <path d="M13.73 21a2 2 0 01-3.46 0"/>
+            </svg>
+          </button>
         </div>
       </div>
 
-      {/* XP Card — floats over the header */}
-      <div style={{ padding: "0 20px", marginTop: -36 }}>
-        <div className="card" style={{ padding: 18 }}>
-          <div style={{ display: "flex", justifyContent: "space-between",
-            alignItems: "center", marginBottom: 10 }}>
-            <div>
-              <p style={{ fontSize: 12, color: "#6B7280", fontWeight: 600 }}>Your XP Progress</p>
-              <p style={{ fontFamily: "var(--font-head)", fontSize: 20, fontWeight: 800, color: "#111827" }}>
-                {user?.xp || 340} / 500 XP
+      {/* ══ COMBINED HERO + LEVEL CARD ══ */}
+      <div style={{ margin: "0 16px 14px" }}>
+        <GlassCard style={{ padding: "18px 20px 16px", position: "relative", overflow: "hidden" }}>
+          {/* bg accent circle */}
+          <div style={{ position: "absolute", top: -40, right: -40, width: 180, height: 180, borderRadius: "50%", background: "rgba(37,99,235,0.06)", pointerEvents: "none" }} />
+          <div style={{ position: "absolute", bottom: -30, left: -20, width: 110, height: 110, borderRadius: "50%", background: "rgba(37,99,235,0.04)", pointerEvents: "none" }} />
+
+          {/* Top row: greeting + senya */}
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+            <div style={{ flex: 1, paddingRight: 8 }}>
+              <p style={{ color: "#4b7bbb", fontSize: 13, fontWeight: 600 }}>{getGreeting()}</p>
+              <h1 style={{ color: "#0f3172", fontSize: 26, fontWeight: 800, lineHeight: 1.15, marginTop: 2, fontFamily: "var(--font-head)" }}>
+                Hello, {user?.name || "Maria"}!
+              </h1>
+
+              {/* Badges row */}
+              <div style={{ display: "flex", gap: 6, marginTop: 8, flexWrap: "wrap" }}>
+                <span style={{ background: "rgba(15,49,114,0.10)", borderRadius: 8, padding: "4px 10px", fontSize: 11, fontWeight: 700, color: "#0f3172", display: "flex", alignItems: "center", gap: 4 }}>
+                  <StarIcon size={12} color="#fbbf24" /> Beginner
+                </span>
+                <span style={{ background: "rgba(251,191,36,0.15)", borderRadius: 8, padding: "4px 10px", fontSize: 11, fontWeight: 700, color: "#92400E", display: "flex", alignItems: "center", gap: 4 }}>
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="#fb923c"><path d="M12 2c0 6-8 8-8 14a8 8 0 0016 0C20 10 12 8 12 2z"/></svg>
+                  {user?.streak || 5} day streak
+                </span>
+              </div>
+            </div>
+
+            {/* Senya — fixed size, no layout impact */}
+            <img
+              src={senya_blue}
+              alt="Senya"
+              onClick={() => nav("tutorial")}
+              style={{
+                width: 100,
+                height: 100,
+                objectFit: "contain",
+                filter: "drop-shadow(0 4px 12px rgba(15,49,114,0.18))",
+                animation: "senya-bob 2.5s ease-in-out infinite",
+                cursor: "pointer",
+                flexShrink: 0,
+                marginTop: -6,
+              }}
+            />
+          </div>
+
+          {/* Divider */}
+          <div style={{ height: 1, background: "rgba(15,49,114,0.08)", margin: "14px 0 12px" }} />
+
+          {/* Level + progress row */}
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            {/* Trophy */}
+            <div style={{ width: 44, height: 44, borderRadius: 12, background: "rgba(251,191,36,0.15)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+              <TrophyIcon size={24} color="#fbbf24" />
+            </div>
+
+            <div style={{ flex: 1 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 5 }}>
+                <div>
+                  <span style={{ display: "inline-flex", alignItems: "center", background: "#1848c8", borderRadius: 6, padding: "2px 8px", fontSize: 9, fontWeight: 800, color: "#fff", letterSpacing: 1, marginRight: 6 }}>
+                    LEVEL 1
+                  </span>
+                  <span style={{ fontSize: 14, fontWeight: 800, color: "#0f3172", fontFamily: "var(--font-head)" }}>Novice Signer</span>
+                </div>
+                <span style={{ fontSize: 11, fontWeight: 700, color: "#4b7bbb" }}>{Math.round(xpPct)}%</span>
+              </div>
+              <div style={{ background: "rgba(15,49,114,0.12)", borderRadius: 99, height: 8, overflow: "hidden" }}>
+                <div style={{ height: "100%", width: `${xpPct}%`, background: "linear-gradient(90deg,#fbbf24,#f59e0b)", borderRadius: 99, transition: "width 0.5s" }} />
+              </div>
+              <p style={{ fontSize: 10, color: "#4b7bbb", fontWeight: 600, marginTop: 4 }}>
+                {xp} / {xpMax} XP · {xpMax - xp} XP to Intermediate
               </p>
             </div>
-            <div style={{ textAlign: "right" }}>
-              <p style={{ fontSize: 12, color: "#6B7280", fontWeight: 600 }}>Next Level</p>
-              <p style={{ fontSize: 14, fontWeight: 800, color: "#3B82F6" }}>Intermediate</p>
+          </div>
+        </GlassCard>
+      </div>
+
+      {/* ══ DAILY CHALLENGE — big & captivating ══ */}
+      <div style={{ margin: "0 16px 14px" }}>
+        <PressableButton
+          onClick={() => nav("quizmc")}
+          style={{
+            width: "100%",
+            background: "linear-gradient(135deg, #1035a0 0%, #1848c8 50%, #2563EB 100%)",
+            border: "none",
+            borderRadius: 20,
+            padding: 0,
+            cursor: "pointer",
+            textAlign: "left",
+            overflow: "hidden",
+            boxShadow: "0 6px 24px rgba(15,49,114,0.32)",
+            position: "relative",
+          }}
+        >
+          {/* Decorative blobs */}
+          <div style={{ position: "absolute", top: -28, right: -28, width: 120, height: 120, borderRadius: "50%", background: "rgba(255,255,255,0.06)", pointerEvents: "none" }} />
+          <div style={{ position: "absolute", bottom: -20, left: 60, width: 90, height: 90, borderRadius: "50%", background: "rgba(255,255,255,0.05)", pointerEvents: "none" }} />
+          <div style={{ position: "absolute", top: 20, right: 100, width: 40, height: 40, borderRadius: "50%", background: "rgba(255,255,255,0.04)", pointerEvents: "none" }} />
+
+          <div style={{ padding: "20px 20px 18px" }}>
+            {/* Label row */}
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+              <div style={{ width: 28, height: 28, borderRadius: 8, background: "rgba(255,255,255,0.18)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                {/* Target/bullseye icon */}
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="10" stroke="#fff" strokeWidth="2"/>
+                  <circle cx="12" cy="12" r="6"  stroke="rgba(255,255,255,0.6)" strokeWidth="2"/>
+                  <circle cx="12" cy="12" r="2"  fill="#fff"/>
+                </svg>
+              </div>
+              <span style={{ fontSize: 11, fontWeight: 800, color: "rgba(255,255,255,0.75)", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+                Daily Challenge
+              </span>
+              {/* Bonus XP pill */}
+              <span style={{ marginLeft: "auto", background: "rgba(251,191,36,0.25)", borderRadius: 99, padding: "3px 10px", fontSize: 11, fontWeight: 800, color: "#fde68a" }}>
+                +50 XP
+              </span>
+            </div>
+
+            {/* Main content row */}
+            <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 12 }}>
+              <div style={{ flex: 1 }}>
+                <p style={{ fontSize: 22, fontWeight: 800, color: "#fff", fontFamily: "var(--font-head)", lineHeight: 1.2, marginBottom: 6 }}>
+                  Practice 5 Alphabet Signs
+                </p>
+                <p style={{ fontSize: 12, color: "rgba(255,255,255,0.65)", fontWeight: 500, lineHeight: 1.4 }}>
+                  Sign A through E and earn your daily streak bonus.
+                </p>
+
+                {/* Progress dots */}
+                <div style={{ display: "flex", gap: 5, marginTop: 12 }}>
+                  {[1,2,3,4,5].map(n => (
+                    <div key={n} style={{
+                      width: 28, height: 6, borderRadius: 99,
+                      background: n <= 2 ? "#fbbf24" : "rgba(255,255,255,0.2)",
+                      transition: "background 0.3s",
+                    }} />
+                  ))}
+                </div>
+                <p style={{ fontSize: 10, color: "rgba(255,255,255,0.5)", fontWeight: 600, marginTop: 5 }}>2 of 5 completed</p>
+              </div>
+
+              {/* Big hand/sign illustration */}
+              <div style={{ flexShrink: 0, display: "flex", flexDirection: "column", alignItems: "center", gap: 10 }}>
+                <div style={{ width: 72, height: 72, borderRadius: 20, background: "rgba(255,255,255,0.12)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  {/* Hand sign SVG */}
+                  <svg width="42" height="42" viewBox="0 0 24 24" fill="none">
+                    <path d="M6 3v12M6 3c0-1.1.9-2 2-2s2 .9 2 2v6M10 3v6M10 3c0-1.1.9-2 2-2s2 .9 2 2v6M14 5c0-1.1.9-2 2-2s2 .9 2 2v8c0 3.3-2.7 6-6 6H9a6 6 0 01-6-6V9c0-1.1.9-2 2-2s2 .9 2 2" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </div>
+                {/* Go button */}
+                <div style={{ background: "#fbbf24", borderRadius: 12, padding: "9px 18px", display: "flex", alignItems: "center", gap: 6 }}>
+                  <span style={{ color: "#78350f", fontWeight: 800, fontSize: 14 }}>Start</span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#78350f" strokeWidth="2.5">
+                    <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+                  </svg>
+                </div>
+              </div>
             </div>
           </div>
-          <div className="xp-bar-wrap" style={{ height: 10 }}>
-            <div className="xp-bar-fill" style={{ width: `${((user?.xp || 340)/500)*100}%` }} />
-          </div>
-          <p style={{ fontSize: 11, color: "#9CA3AF", marginTop: 6, fontWeight: 600 }}>
-            {500 - (user?.xp || 340)} XP to unlock Intermediate level
-          </p>
-        </div>
+        </PressableButton>
       </div>
 
-      {/* Daily Challenge */}
-      <div style={{ padding: "16px 20px 0" }}>
-        <div style={{
-          background: "linear-gradient(135deg, #FFF7ED, #FFEDD5)",
-          border: "1.5px solid #FED7AA", borderRadius: 20, padding: 16,
-          display: "flex", alignItems: "center", gap: 14
-        }}>
-          <div style={{
-            width: 50, height: 50, borderRadius: 14, background: "#F59E0B",
-            display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0
-          }}>
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="#fff"><circle cx="12" cy="12" r="2" /><path d="M12 5a7 7 0 0 1 7 7m0 0a7 7 0 0 1-7 7m0 0a7 7 0 0 1-7-7m0 0a7 7 0 0 1 7-7" fill="none" stroke="#fff" strokeWidth="2"/></svg>
-          </div>
-          <div style={{ flex: 1 }}>
-            <p style={{ fontSize: 11, color: "#92400E", fontWeight: 700,
-              textTransform: "uppercase", letterSpacing: "0.04em" }}>Daily Challenge</p>
-            <p style={{ fontSize: 15, fontWeight: 800, color: "#78350F",
-              fontFamily: "var(--font-head)", marginTop: 2 }}>
-              Practice 5 Alphabet Signs
-            </p>
-          </div>
-          <button onClick={() => nav("quizmc")} style={{
-            background: "#F59E0B", border: "none", borderRadius: 12,
-            padding: "10px 16px", color: "#fff", fontWeight: 700, fontSize: 13,
-            cursor: "pointer", fontFamily: "var(--font-body)",
-            boxShadow: "0 2px 8px rgba(245,158,11,0.4)"
-          }}>Go →</button>
-        </div>
-      </div>
-
-      {/* Continue Lessons */}
-      <div style={{ padding: "16px 20px 0" }}>
-        <div style={{ display: "flex", justifyContent: "space-between",
-          alignItems: "center", marginBottom: 14 }}>
-          <h2 style={{ fontFamily: "var(--font-head)", fontSize: 18, fontWeight: 800, color: "#111827" }}>
-            Continue Learning
-          </h2>
-          <button onClick={() => nav("lessons")} style={{
-            background: "none", border: "none", color: "#3B82F6",
-            fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "var(--font-body)"
-          }}>See All →</button>
+      {/* ── Continue Learning ── */}
+      <div style={{ margin: "0 16px 14px" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+          <h2 style={{ fontFamily: "var(--font-head)", fontSize: 17, fontWeight: 800, color: "#0f3172" }}>Continue Learning</h2>
+          <PressableButton
+            onClick={() => nav("lessons")}
+            style={{ background: "none", border: "none", color: "#2563EB", fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "var(--font-body)", padding: "4px 0" }}
+          >
+            See All →
+          </PressableButton>
         </div>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-          {lessons.map((l, i) => (
-            <button key={i} onClick={() => nav("lessons")} style={{
-              display: "flex", alignItems: "center", gap: 14,
-              background: "#fff", border: "1.5px solid #E5E7EB",
-              borderRadius: 16, padding: 14, cursor: "pointer",
-              textAlign: "left", width: "100%", transition: "all 0.15s",
-              opacity: l.tag === "Locked" ? 0.55 : 1
-            }}>
-              <div style={{
-                width: 48, height: 48, borderRadius: 14,
-                background: `${l.color}18`,
-                display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0
-              }}>
-                {l.tag === "Completed" ? <CheckIcon size={24} /> : l.tag === "Locked" ? <LockIcon size={24} color="#9CA3AF" /> : <LessonIcon icon={l.icon} />}
-              </div>
-              <div style={{ flex: 1 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <p style={{ fontSize: 15, fontWeight: 700, color: "#111827" }}>{l.title}</p>
-                  <span style={{
-                    fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 20,
-                    background: l.tag === "Completed" ? "#ECFDF5" : l.tag === "Locked" ? "#F3F4F6" : "#FFFBEB",
-                    color: l.tag === "Completed" ? "#065F46" : l.tag === "Locked" ? "#6B7280" : "#92400E"
-                  }}>{l.tag}</span>
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          {lessons.map((l, i) => {
+            const isLocked    = l.tag === "Locked";
+            const isCompleted = l.tag === "Completed";
+            return (
+              <PressableButton
+                key={i}
+                onClick={() => !isLocked && nav("lessons")}
+                disabled={isLocked}
+                style={{
+                  display: "flex", alignItems: "center", gap: 12,
+                  background: "rgba(255,255,255,0.62)",
+                  border: "1px solid rgba(255,255,255,0.85)",
+                  borderRadius: 14, padding: 13,
+                  cursor: isLocked ? "not-allowed" : "pointer",
+                  textAlign: "left", width: "100%",
+                  opacity: isLocked ? 0.5 : 1,
+                  backdropFilter: "blur(8px)",
+                  boxShadow: "0 2px 8px rgba(15,49,114,0.07)",
+                  fontFamily: "var(--font-body)",
+                }}
+              >
+                <div style={{ width: 44, height: 44, borderRadius: 12, background: isLocked ? "rgba(15,49,114,0.06)" : "rgba(37,99,235,0.10)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  {isCompleted
+                    ? <CheckIcon size={22} color="#2563EB" />
+                    : isLocked
+                    ? <LockIcon size={22} color="#9CA3AF" />
+                    : <LessonIcon icon={l.icon} />}
                 </div>
-                <div style={{ marginTop: 6 }}>
-                  <div className="xp-bar-wrap" style={{ height: 5 }}>
-                    <div className="xp-bar-fill" style={{
-                      width: `${l.progress}%`,
-                      background: `linear-gradient(90deg, ${l.color}80, ${l.color})`
-                    }} />
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8 }}>
+                    <p style={{ fontSize: 14, fontWeight: 700, color: "#0f3172", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{l.title}</p>
+                    <span style={{
+                      fontSize: 10, fontWeight: 700, padding: "3px 9px", borderRadius: 99, flexShrink: 0,
+                      background: isCompleted ? "rgba(37,99,235,0.12)" : isLocked ? "rgba(15,49,114,0.07)" : "rgba(251,191,36,0.18)",
+                      color: isCompleted ? "#1848c8" : isLocked ? "#6B7280" : "#92400E",
+                    }}>
+                      {l.tag}
+                    </span>
                   </div>
-                  <p style={{ fontSize: 11, color: "#9CA3AF", marginTop: 3, fontWeight: 600 }}>
-                    {l.progress}% complete
-                  </p>
+                  <div style={{ background: "rgba(15,49,114,0.10)", borderRadius: 99, height: 5, overflow: "hidden", marginTop: 7 }}>
+                    <div style={{ height: "100%", width: `${l.progress}%`, background: isCompleted ? "linear-gradient(90deg,#60a5fa,#2563EB)" : "linear-gradient(90deg,#fbbf24,#f59e0b)", borderRadius: 99 }} />
+                  </div>
+                  <p style={{ fontSize: 10, color: "#4b7bbb", marginTop: 3, fontWeight: 600 }}>{l.progress}% complete</p>
                 </div>
-              </div>
-            </button>
-          ))}
+              </PressableButton>
+            );
+          })}
         </div>
       </div>
 
-      {/* Quick Actions */}
-      <div style={{ padding: "16px 20px 0" }}>
-        <h2 style={{ fontFamily: "var(--font-head)", fontSize: 18, fontWeight: 800,
-          color: "#111827", marginBottom: 14 }}>Quick Practice</h2>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-          {[
-            { label: "Multiple Choice", icon: "mc", color: "#3B82F6", screen: "quizmc" },
-            { label: "Drag & Drop", icon: "dnd", color: "#8B5CF6", screen: "quizdnd" },
-            { label: "Gesture Cam", icon: "cam", color: "#10B981", screen: "gesture" },
-            { label: "My Badges", icon: "badge", color: "#F59E0B", screen: "achievements" },
-          ].map((q, i) => (
-            <button key={i} onClick={() => nav(q.screen)} style={{
-              background: "#fff", border: "1.5px solid #E5E7EB", borderRadius: 16,
-              padding: "16px 14px", cursor: "pointer", textAlign: "center",
-              transition: "transform 0.15s, box-shadow 0.15s"
-            }}>
-              <div style={{
-                width: 46, height: 46, borderRadius: 13,
-                background: `${q.color}14`,
-                display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 8px"
-              }}>
-                {q.icon === "mc" && <svg width="22" height="22" viewBox="0 0 24 24" fill={q.color}><rect x="3" y="3" width="18" height="18" rx="2" fill="none" stroke={q.color} strokeWidth="2"/><path d="M9 12l2 2 4-4" stroke={q.color} strokeWidth="2" fill="none"/></svg>}
-                {q.icon === "dnd" && <svg width="22" height="22" viewBox="0 0 24 24" fill={q.color} opacity="0.8"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="8" rx="1"/><rect x="3" y="13" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/></svg>}
-                {q.icon === "cam" && <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={q.color} strokeWidth="2"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>}
-                {q.icon === "badge" && <TrophyIcon size={22} color={q.color} />}
+      {/* ── Quick Practice ── */}
+      <div style={{ margin: "0 16px 0" }}>
+        <h2 style={{ fontFamily: "var(--font-head)", fontSize: 17, fontWeight: 800, color: "#0f3172", marginBottom: 10 }}>Quick Practice</h2>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+          {quickActions.map((q, i) => (
+            <PressableButton
+              key={i}
+              onClick={() => nav(q.screen)}
+              style={{
+                background: "rgba(255,255,255,0.62)",
+                border: "1px solid rgba(255,255,255,0.85)",
+                borderRadius: 14, padding: "14px 10px",
+                cursor: "pointer", textAlign: "center",
+                backdropFilter: "blur(8px)",
+                boxShadow: "0 2px 8px rgba(15,49,114,0.07)",
+                display: "flex", flexDirection: "column", alignItems: "center", gap: 7,
+                fontFamily: "var(--font-body)",
+              }}
+            >
+              <div style={{ width: 44, height: 44, borderRadius: 12, background: "rgba(37,99,235,0.10)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <QuickIcon icon={q.icon} color={q.color} />
               </div>
-              <p style={{ fontSize: 13, fontWeight: 700, color: "#374151" }}>{q.label}</p>
-            </button>
+              <p style={{ fontSize: 12, fontWeight: 700, color: "#0f3172" }}>{q.label}</p>
+            </PressableButton>
           ))}
         </div>
       </div>
