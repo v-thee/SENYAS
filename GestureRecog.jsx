@@ -139,11 +139,11 @@ const LESSONS = [
 function Btn({ onClick, children, variant = "primary", disabled, style: sx = {} }) {
   const [pressed, setPressed] = useState(false);
   const base = {
-    primary: { background: "linear-gradient(135deg, #1E40AF, #2563EB)", color: "#fff", boxShadow: "0 6px 14px rgba(37,99,235,0.3)" },
-    success: { background: "linear-gradient(135deg, #059669, #10B981)", color: "#fff", boxShadow: "0 6px 14px rgba(16,185,129,0.3)" },
-    danger:  { background: "linear-gradient(135deg, #DC2626, #EF4444)", color: "#fff", boxShadow: "0 6px 14px rgba(239,68,68,0.3)" },
-    ghost:   { background: "#F8FAFC", color: "#1E293B", border: "1px solid #CBD5E1", boxShadow: "none" },
-    outline: { background: "transparent", color: "#2563EB", border: "2px solid #2563EB", boxShadow: "none" },
+    primary: { background: "linear-gradient(135deg, #1E40AF, #2563EB)", color: "#fff", boxShadow: "0 4px 12px rgba(37,99,235,0.3)" },
+    success: { background: "linear-gradient(135deg, #059669, #10B981)", color: "#fff", boxShadow: "0 4px 12px rgba(16,185,129,0.3)" },
+    danger:  { background: "linear-gradient(135deg, #DC2626, #EF4444)", color: "#fff", boxShadow: "0 4px 12px rgba(239,68,68,0.3)" },
+    ghost:   { background: "#F1F5F9", color: "#334155", border: "1px solid #E2E8F0" },
+    outline: { background: "transparent", color: "#2563EB", border: "2px solid #2563EB" },
   }[variant] || {};
   return (
     <button
@@ -168,7 +168,7 @@ function Btn({ onClick, children, variant = "primary", disabled, style: sx = {} 
 }
 
 /* ── Progress ring ───────────────────────────────────────────────────── */
-function Ring({ pct, size = 80, stroke = 7, color = "#2563EB" }) {
+function Ring({ pct, size = 80, stroke = 7, color = "#1848c8" }) {
   const r = (size - stroke) / 2;
   const circ = 2 * Math.PI * r;
   return (
@@ -213,7 +213,7 @@ function Confetti({ count = 28 }) {
   );
 }
 
-/* ── Result overlay shown after detection (now stays inside phone border) ── */
+/* ── Result overlay shown after detection ────────────────────────────── */
 function ResultOverlay({ visible, success }) {
   const [stage, setStage] = useState(0);
   useEffect(() => {
@@ -230,9 +230,9 @@ function ResultOverlay({ visible, success }) {
       background: success ? "rgba(236,253,245,0.96)" : "rgba(254,242,242,0.96)",
       display: "flex", alignItems: "center", justifyContent: "center",
       flexDirection: "column", gap: 10,
-      backdropFilter: "blur(10px)",
+      backdropFilter: "blur(6px)",
       borderRadius: "20px",
-      animation: "fadeInOverlay 0.2s ease",
+      animation: "fadeInOverlay 0.18s ease",
     }}>
       {stage >= 1 && success && <Confetti />}
       <div style={{
@@ -267,10 +267,6 @@ function ResultOverlay({ visible, success }) {
 /* ── Pre-achievement countdown shown before trophy screen (CONTAINED IN APP) ── */
 function PreAchievementAnim({ score, total, onDone }) {
   const [step, setStep] = useState(0);
-  // step 0: senya bounces in   (0ms)
-  // step 1: counting numbers   (600ms)
-  // step 2: flash to white     (1700ms)
-  // step 3: done               (2100ms)
   useEffect(() => {
     const timers = [
       setTimeout(() => setStep(1), 600),
@@ -289,12 +285,12 @@ function PreAchievementAnim({ score, total, onDone }) {
       display: "flex", flexDirection: "column",
       alignItems: "center", justifyContent: "center", gap: 16,
       transition: "background 0.35s ease",
-      borderRadius: "20px", // match app border radius
+      borderRadius: "20px",
     }}>
       {step >= 1 && <Confetti count={40} />}
 
       <img src={senya_teaching} alt="Senya" style={{
-        width: 140, height: 140, objectFit: "contain",
+        width: 150, height: 150, objectFit: "contain",
         animation: step === 0
           ? "senyaPop 0.5s cubic-bezier(0.34,1.5,0.64,1)"
           : step >= 1
@@ -418,7 +414,7 @@ function PermissionScreen({ onAllow, onBack, error }) {
       display: "flex", alignItems: "center", justifyContent: "center", padding: 20,
     }}>
       <div style={{ background: "rgba(255,255,255,0.95)", borderRadius: 32, padding: "32px 24px", maxWidth: 340, width: "100%", textAlign: "center", boxShadow: "0 12px 48px rgba(15,49,114,0.12)", animation: "popIn 0.3s ease" }}>
-        <div style={{ width: 72, height: 72, background: "linear-gradient(135deg, #EFF6FF, #DBEAFE)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 18px" }}>
+        <div style={{ width: 72, height: 72, background: "#EFF6FF", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 18px" }}>
           <Icon.Camera width={36} height={36} style={{ color: "#1848c8" }} />
         </div>
         <h2 style={{ color: "#0f3172", fontSize: 20, fontWeight: 800, marginBottom: 8 }}>Camera Access</h2>
@@ -450,18 +446,18 @@ function PracticeScreen({ onBack, videoRef, phase, sign, signIdx, score, totalSi
   const pct = Math.round((signIdx / totalSigns) * 100);
 
   const borderColor = {
-    ready:     "#CBD5E1",
+    ready:     "#E2E8F0",
     detecting: "#F59E0B",
     success:   "#10B981",
     fail:      "#EF4444",
-  }[phase] || "#CBD5E1";
+  }[phase] || "#E2E8F0";
 
   const shadowColor = {
-    detecting: "0 0 0 3px rgba(245,158,11,0.2), 0 4px 20px rgba(0,0,0,0.1)",
-    success:   "0 0 0 3px rgba(16,185,129,0.2), 0 4px 20px rgba(0,0,0,0.1)",
-    fail:      "0 0 0 3px rgba(239,68,68,0.2), 0 4px 20px rgba(0,0,0,0.1)",
-    ready:     "0 4px 20px rgba(0,0,0,0.08)",
-  }[phase] || "0 4px 20px rgba(0,0,0,0.08)";
+    detecting: "rgba(245,158,11,0.2)",
+    success:   "rgba(16,185,129,0.25)",
+    fail:      "rgba(239,68,68,0.2)",
+    ready:     "rgba(15,49,114,0.08)",
+  }[phase] || "rgba(15,49,114,0.08)";
 
   return (
     <div style={{
@@ -534,150 +530,194 @@ function PracticeScreen({ onBack, videoRef, phase, sign, signIdx, score, totalSi
         </div>
       </div>
 
-      {/* ── Camera frame — fixed height, not flex-grow ── */}
+      {/* ── Camera frame ── */}
       <div style={{ padding: "0 14px", flexShrink: 0 }}>
         <div style={{
-          position: "relative", borderRadius: 20, overflow: "hidden",
-          background: "#e8f1fb",
-          aspectRatio: "4 / 3",
-          width: "100%",
-          border: `2px solid ${borderColor}`,
-          boxShadow: shadowColor,
-          transition: "border-color 0.3s, box-shadow 0.4s",
+          borderRadius: 22, padding: 3,
+          background: phase === "detecting"
+            ? "linear-gradient(135deg,#F59E0B,#FCD34D,#F59E0B)"
+            : phase === "success" ? "linear-gradient(135deg,#10B981,#34D399,#10B981)"
+            : phase === "fail"    ? "linear-gradient(135deg,#EF4444,#F87171,#EF4444)"
+            : "linear-gradient(135deg,#BFDBFE,#93C5FD,#BFDBFE)",
+          boxShadow: phase === "detecting" ? "0 0 22px rgba(245,158,11,0.4)"
+            : phase === "success" ? "0 0 22px rgba(16,185,129,0.4)"
+            : phase === "fail"    ? "0 0 22px rgba(239,68,68,0.4)"
+            : "0 4px 20px rgba(15,49,114,0.12)",
+          transition: "all 0.4s ease",
         }}>
-          <video ref={videoRef} autoPlay playsInline muted style={{ width: "100%", height: "100%", objectFit: "cover", transform: "scaleX(-1)", display: "block" }} />
-
-          {/* Corner brackets */}
-          {["tl","tr","bl","br"].map(c => (
-            <div key={c} style={{
-              position: "absolute",
-              top: c.startsWith("t") ? 12 : "auto", bottom: c.startsWith("b") ? 12 : "auto",
-              left: c.endsWith("l") ? 12 : "auto",  right: c.endsWith("r") ? 12 : "auto",
-              width: 20, height: 20,
-              borderTop:    c.startsWith("t") ? `3px solid ${borderColor}` : "none",
-              borderBottom: c.startsWith("b") ? `3px solid ${borderColor}` : "none",
-              borderLeft:   c.endsWith("l")   ? `3px solid ${borderColor}` : "none",
-              borderRight:  c.endsWith("r")   ? `3px solid ${borderColor}` : "none",
-              borderRadius: c==="tl"?"6px 0 0 0":c==="tr"?"0 6px 0 0":c==="bl"?"0 0 0 6px":"0 0 6px 0",
-              transition: "border-color 0.3s",
-            }} />
-          ))}
-
-          {/* Scan line */}
-          {phase === "detecting" && (
-            <div style={{
-              position: "absolute", left: 0, right: 0, height: 3,
-              background: "linear-gradient(90deg, transparent, #F59E0B, transparent)",
-              animation: "scanLine 1.4s ease-in-out infinite",
-              boxShadow: "0 0 10px rgba(245,158,11,0.7)",
-            }} />
-          )}
-
-          {/* Scanning pill */}
-          {phase === "detecting" && (
-            <div style={{ position: "absolute", top: 10, left: "50%", transform: "translateX(-50%)", background: "rgba(245,158,11,0.95)", borderRadius: 20, padding: "4px 12px", display: "flex", alignItems: "center", gap: 5, backdropFilter: "blur(8px)" }}>
-              <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#fff", animation: "blink 0.7s ease-in-out infinite" }} />
-              <span style={{ color: "#fff", fontSize: 10, fontWeight: 800, letterSpacing: 0.5 }}>SCANNING</span>
-            </div>
-          )}
-
-          {/* Success/fail pill inside camera */}
-          {(phase === "success" || phase === "fail") && (
-            <div style={{
-              position: "absolute", bottom: 12, left: 12, right: 12,
-              background: phase === "success" ? "rgba(16,185,129,0.95)" : "rgba(239,68,68,0.95)",
-              borderRadius: 28, padding: "8px 12px",
-              display: "flex", alignItems: "center", gap: 7,
-              backdropFilter: "blur(6px)",
-              animation: "slideUpIn 0.25s ease",
-            }}>
-              {phase === "success"
-                ? <Icon.Check width={14} height={14} style={{ color: "#fff" }} />
-                : <Icon.X     width={14} height={14} style={{ color: "#fff" }} />
-              }
-              <span style={{ color: "#fff", fontSize: 12, fontWeight: 700 }}>
-                {phase === "success" ? "Correct! Great job!" : "Not quite — try again!"}
-              </span>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* ── Senya + feedback section — now with larger image ── */}
-      <div style={{ flex: 1, padding: "12px 14px 0", display: "flex", alignItems: "center", gap: 12, minHeight: 0 }}>
-        {/* Senya teaching image — made larger */}
-        <div style={{ flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <img
-            src={senya_teaching}
-            alt="Senya"
-            style={{
-              width: 110, height: 110, objectFit: "contain",
-              animation: phase === "detecting"
-                ? "senyaThink 1.2s ease-in-out infinite"
-                : phase === "success"
-                ? "senyaPop 0.4s cubic-bezier(0.34,1.5,0.64,1)"
-                : "bob 2.8s ease-in-out infinite",
-              filter: "drop-shadow(0 6px 12px rgba(15,49,114,0.2))",
-            }}
-          />
-        </div>
-
-        {/* Speech bubble with feedback */}
-        <div style={{
-          flex: 1,
-          position: "relative",
-          background: {
-            ready:     "#fff",
-            detecting: "#FFFBEB",
-            success:   "#ECFDF5",
-            fail:      "#FEF2F2",
-          }[phase],
-          borderRadius: 16,
-          borderBottomLeftRadius: 4,
-          padding: "12px 14px",
-          boxShadow: "0 4px 16px rgba(15,49,114,0.1)",
-          border: `1px solid ${phase==="detecting"?"#fde68a":phase==="success"?"#a7f3d0":phase==="fail"?"#fecaca":"#E2E8F0"}`,
-          transition: "all 0.3s",
-        }}>
-          {/* Bubble tail pointing left toward Senya */}
           <div style={{
-            position: "absolute", left: -7, bottom: 12,
-            width: 0, height: 0,
-            borderTop: "7px solid transparent",
-            borderBottom: "7px solid transparent",
-            borderRight: `7px solid ${phase==="detecting"?"#fde68a":phase==="success"?"#a7f3d0":phase==="fail"?"#fecaca":"#E2E8F0"}`,
-          }} />
-          <div style={{
-            position: "absolute", left: -5, bottom: 13,
-            width: 0, height: 0,
-            borderTop: "6px solid transparent",
-            borderBottom: "6px solid transparent",
-            borderRight: `6px solid ${phase==="detecting"?"#FFFBEB":phase==="success"?"#ECFDF5":phase==="fail"?"#FEF2F2":"#fff"}`,
-          }} />
+            position: "relative", borderRadius: 20, overflow: "hidden",
+            background: "#dbeafe", aspectRatio: "4 / 3", width: "100%",
+          }}>
+            <video ref={videoRef} autoPlay playsInline muted style={{
+              position: "absolute", inset: 0, width: "100%", height: "100%",
+              objectFit: "cover", transform: "scaleX(-1)", display: "block", zIndex: 1,
+            }} />
 
-          {/* Icon + message */}
-          <div style={{ display: "flex", alignItems: "flex-start", gap: 8 }}>
-            {phase === "detecting" && <div style={{ width: 14, height: 14, borderRadius: "50%", border: "2px solid #F59E0B", borderTopColor: "transparent", animation: "spin 0.7s linear infinite", flexShrink: 0, marginTop: 2 }} />}
-            {phase === "success"   && <Icon.Check width={14} height={14} style={{ color: "#10B981", flexShrink: 0, marginTop: 2 }} />}
-            {phase === "fail"      && <Icon.X     width={14} height={14} style={{ color: "#EF4444", flexShrink: 0, marginTop: 2 }} />}
-            {phase === "ready"     && <Icon.Scan  width={14} height={14} style={{ color: "#94a3b8", flexShrink: 0, marginTop: 2 }} />}
-            <p style={{
-              fontSize: 13, fontWeight: 500, margin: 0, lineHeight: 1.5,
-              color: phase==="detecting"?"#92400e":phase==="success"?"#065f46":phase==="fail"?"#991b1b":"#475569",
+            {/* Vignette */}
+            <div style={{
+              position: "absolute", inset: 0, zIndex: 2, pointerEvents: "none",
+              background: "radial-gradient(ellipse at center, transparent 55%, rgba(15,49,114,0.15) 100%)",
+            }} />
+
+            {/* Corner brackets */}
+            {["tl","tr","bl","br"].map(c => (
+              <div key={c} style={{
+                position: "absolute", zIndex: 4,
+                top: c.startsWith("t") ? 10 : "auto", bottom: c.startsWith("b") ? 10 : "auto",
+                left: c.endsWith("l") ? 10 : "auto",  right: c.endsWith("r") ? 10 : "auto",
+                width: 24, height: 24,
+                borderTop:    c.startsWith("t") ? `3.5px solid ${borderColor}` : "none",
+                borderBottom: c.startsWith("b") ? `3.5px solid ${borderColor}` : "none",
+                borderLeft:   c.endsWith("l")   ? `3.5px solid ${borderColor}` : "none",
+                borderRight:  c.endsWith("r")   ? `3.5px solid ${borderColor}` : "none",
+                borderRadius: c==="tl"?"6px 0 0 0":c==="tr"?"0 6px 0 0":c==="bl"?"0 0 0 6px":"0 0 6px 0",
+                transition: "border-color 0.3s",
+              }} />
+            ))}
+
+            {/* Dashed hand target zone (ready only) */}
+            {phase === "ready" && (
+              <div style={{
+                position: "absolute", zIndex: 3,
+                top: "50%", left: "50%",
+                transform: "translate(-50%,-50%)",
+                width: "52%", height: "70%",
+                border: "1.5px dashed rgba(147,197,253,0.65)",
+                borderRadius: 14, pointerEvents: "none",
+              }} />
+            )}
+
+            {/* Animated scan line */}
+            {phase === "detecting" && (
+              <>
+                <div style={{
+                  position: "absolute", left: 0, right: 0, height: 2.5, zIndex: 5,
+                  background: "linear-gradient(90deg,transparent 5%,#F59E0B 50%,transparent 95%)",
+                  animation: "scanLine 1.4s ease-in-out infinite",
+                  boxShadow: "0 0 14px rgba(245,158,11,0.95)",
+                }} />
+                <div style={{
+                  position: "absolute", inset: 0, zIndex: 3, pointerEvents: "none",
+                  backgroundImage: "linear-gradient(rgba(245,158,11,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(245,158,11,0.05) 1px,transparent 1px)",
+                  backgroundSize: "26px 26px",
+                }} />
+              </>
+            )}
+
+            {/* Top HUD bar */}
+            <div style={{
+              position: "absolute", top: 0, left: 0, right: 0, zIndex: 6,
+              padding: "8px 10px",
+              display: "flex", justifyContent: "space-between", alignItems: "center",
             }}>
-              {{
-                ready:     `Show me the sign for "${sign.letter}"!`,
-                detecting: "Hold still — I'm checking your hand…",
-                success:   "Perfect! Great form, keep it up!",
-                fail:      "Almost there! Check the hint and try again.",
-              }[phase]}
-            </p>
+              {phase === "detecting" ? (
+                <div style={{ background: "rgba(0,0,0,0.55)", borderRadius: 20, padding: "3px 10px", display: "flex", alignItems: "center", gap: 5, backdropFilter: "blur(8px)" }}>
+                  <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#F59E0B", animation: "blink 0.7s ease-in-out infinite" }} />
+                  <span style={{ color: "#fbbf24", fontSize: 10, fontWeight: 800, letterSpacing: 0.8 }}>SCANNING</span>
+                </div>
+              ) : (
+                <div style={{ background: "rgba(0,0,0,0.42)", borderRadius: 20, padding: "3px 10px", display: "flex", alignItems: "center", gap: 5, backdropFilter: "blur(6px)" }}>
+                  <div style={{ width: 6, height: 6, borderRadius: "50%", background: phase === "success" ? "#34D399" : phase === "fail" ? "#F87171" : "#93C5FD" }} />
+                  <span style={{ color: "#fff", fontSize: 10, fontWeight: 700, letterSpacing: 0.5 }}>
+                    {phase === "success" ? "CORRECT" : phase === "fail" ? "RETRY" : "READY"}
+                  </span>
+                </div>
+              )}
+              {/* Letter badge top-right */}
+              <div style={{ background: "rgba(0,0,0,0.52)", borderRadius: 10, padding: "3px 12px", backdropFilter: "blur(6px)" }}>
+                <span style={{ color: "#fff", fontSize: 14, fontWeight: 900, letterSpacing: 1 }}>{sign.letter}</span>
+              </div>
+            </div>
+
+            {/* Success / fail result bar */}
+            {(phase === "success" || phase === "fail") && (
+              <div style={{
+                position: "absolute", bottom: 0, left: 0, right: 0, zIndex: 6,
+                background: phase === "success"
+                  ? "linear-gradient(135deg,rgba(5,150,105,0.95),rgba(16,185,129,0.95))"
+                  : "linear-gradient(135deg,rgba(220,38,38,0.95),rgba(239,68,68,0.95))",
+                padding: "8px 14px",
+                display: "flex", alignItems: "center", gap: 10,
+                backdropFilter: "blur(8px)",
+                animation: "slideUpIn 0.25s ease",
+              }}>
+                <div style={{ width: 26, height: 26, borderRadius: "50%", background: "rgba(255,255,255,0.2)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  {phase === "success"
+                    ? <Icon.Check width={14} height={14} style={{ color: "#fff" }} />
+                    : <Icon.X     width={14} height={14} style={{ color: "#fff" }} />
+                  }
+                </div>
+                <div>
+                  <p style={{ color: "#fff", fontSize: 12, fontWeight: 800, margin: 0 }}>
+                    {phase === "success" ? "Correct! Great job!" : "Not quite — try again!"}
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
 
+      {/* ── Senya + speech bubble (LARGER IMAGE) ── */}
+      <div style={{ flex: 1, padding: "10px 14px 0", display: "flex", alignItems: "center", gap: 10, minHeight: 0 }}>
+        <div style={{ flexShrink: 0 }}>
+          <img
+            src={senya_teaching}
+            alt="Senya"
+            style={{
+              width: 130, height: 130, objectFit: "contain", display: "block",
+              animation: phase === "detecting" ? "senyaThink 1.2s ease-in-out infinite"
+                : phase === "success"          ? "senyaCelebrate 0.6s cubic-bezier(0.34,1.5,0.64,1)"
+                : phase === "fail"             ? "senyaShake 0.45s ease"
+                : "bob 2.8s ease-in-out infinite",
+              filter: "drop-shadow(0 6px 14px rgba(15,49,114,0.22))",
+            }}
+          />
+        </div>
+
+        <div style={{
+          flex: 1, position: "relative",
+          background: { ready:"#fff", detecting:"#FFFBEB", success:"#ECFDF5", fail:"#FEF2F2" }[phase],
+          borderRadius: "18px 18px 18px 4px",
+          padding: "11px 14px",
+          boxShadow: "0 4px 18px rgba(15,49,114,0.1)",
+          border: `1.5px solid ${phase==="detecting"?"#fde68a":phase==="success"?"#6ee7b7":phase==="fail"?"#fca5a5":"#DBEAFE"}`,
+        }}>
+          <div style={{
+            position: "absolute", left: -8, bottom: 14,
+            borderTop: "8px solid transparent", borderBottom: "8px solid transparent",
+            borderRight: `8px solid ${phase==="detecting"?"#fde68a":phase==="success"?"#6ee7b7":phase==="fail"?"#fca5a5":"#DBEAFE"}`,
+          }} />
+          <div style={{
+            position: "absolute", left: -5.5, bottom: 15.5,
+            borderTop: "6.5px solid transparent", borderBottom: "6.5px solid transparent",
+            borderRight: `6.5px solid ${ { ready:"#fff", detecting:"#FFFBEB", success:"#ECFDF5", fail:"#FEF2F2" }[phase] }`,
+          }} />
+
+          <div style={{ display: "flex", alignItems: "center", gap: 5, marginBottom: 4 }}>
+            {phase === "detecting" && <div style={{ width: 12, height: 12, borderRadius: "50%", border: "2px solid #F59E0B", borderTopColor: "transparent", animation: "spin 0.7s linear infinite", flexShrink: 0 }} />}
+            {phase === "success"   && <Icon.Check width={12} height={12} style={{ color: "#10B981", flexShrink: 0 }} />}
+            {phase === "fail"      && <Icon.X     width={12} height={12} style={{ color: "#EF4444", flexShrink: 0 }} />}
+            {phase === "ready"     && <Icon.Scan  width={12} height={12} style={{ color: "#93c5fd", flexShrink: 0 }} />}
+            <span style={{
+              fontSize: 10, fontWeight: 800, letterSpacing: 0.5, textTransform: "uppercase",
+              color: phase==="detecting"?"#d97706":phase==="success"?"#059669":phase==="fail"?"#dc2626":"#3b82f6",
+            }}>
+              {phase === "detecting" ? "Analyzing…" : phase === "success" ? "Correct!" : phase === "fail" ? "Try again" : "Your turn"}
+            </span>
+          </div>
+          <p style={{
+            fontSize: 12.5, fontWeight: 500, margin: 0, lineHeight: 1.55,
+            color: phase==="detecting"?"#92400e":phase==="success"?"#065f46":phase==="fail"?"#991b1b":"#334155",
+          }}>
+            {{ ready:`Show me the sign for "${sign.letter}" — place your hand in the frame!`, detecting:"Hold still — I'm analyzing your hand position…", success:"Perfect form! You nailed it. Keep up the great work!", fail:"Almost there! Adjust your fingers and give it another shot." }[phase]}
+          </p>
+        </div>
+      </div>
+
       {/* ── Action buttons ── */}
-      <div style={{ padding: "12px 14px 28px", flexShrink: 0 }}>
+      <div style={{ padding: "10px 14px 28px", flexShrink: 0 }}>
         {phase === "ready" && (
           <Btn onClick={onDetect} variant="primary" style={{ width: "100%", padding: "14px" }}>
             <Icon.Scan width={18} height={18} style={{ color: "#fff" }} /> Start Detection
@@ -690,10 +730,10 @@ function PracticeScreen({ onBack, videoRef, phase, sign, signIdx, score, totalSi
           </Btn>
         )}
         {(phase === "success" || phase === "fail") && !showResult && (
-          <div style={{ display: "flex", gap: 10 }}>
+          <div style={{ display: "flex", gap: 8 }}>
             {phase === "fail" && (
               <Btn onClick={onRetry} variant="ghost" style={{ flex: 1, padding: "13px" }}>
-                <Icon.Refresh width={15} height={15} style={{ color: "#1E293B" }} /> Retry
+                <Icon.Refresh width={15} height={15} style={{ color: "#334155" }} /> Retry
               </Btn>
             )}
             <Btn onClick={onNext} variant={phase === "success" ? "success" : "primary"} style={{ flex: 2, padding: "13px" }}>
@@ -742,19 +782,16 @@ function AchievementScreen({ score, total, onRestart, onHome }) {
         animation: "popIn 0.4s cubic-bezier(0.34,1.3,0.64,1)",
         position: "relative", overflow: "hidden",
       }}>
-        {/* Senya */}
         <img src={senya_teaching} alt="Senya" style={{
-          width: 110, height: 110, objectFit: "contain",
+          width: 100, height: 100, objectFit: "contain",
           animation: stage >= 1 ? "senyaPop 0.5s cubic-bezier(0.34,1.5,0.64,1)" : "none",
           filter: "drop-shadow(0 4px 16px rgba(15,49,114,0.15))",
         }} />
 
-        {/* Trophy */}
         <div style={{ animation: stage >= 2 ? "trophyBounce 0.7s cubic-bezier(0.34,1.2,0.64,1)" : "none", marginTop: 4 }}>
           <Icon.Trophy width={52} height={52} style={{ color: "#fbbf24" }} />
         </div>
 
-        {/* Stars */}
         <div style={{ display: "flex", justifyContent: "center", gap: 6, marginTop: 6, marginBottom: 6 }}>
           {[0,1,2].map(i => (
             <div key={i} style={{ animation: stage >= 2 && i < stars ? `starPop 0.4s cubic-bezier(0.34,1.4,0.64,1) ${0.1 + i * 0.13}s both` : "none" }}>
@@ -765,7 +802,6 @@ function AchievementScreen({ score, total, onRestart, onHome }) {
 
         <h2 style={{ fontSize: 26, fontWeight: 800, color, marginBottom: 4 }}>{label}</h2>
 
-        {/* Score ring */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 20, margin: "16px 0", padding: "16px", background: "#F8FAFC", borderRadius: 20 }}>
           <div style={{ position: "relative", width: 80, height: 80, display: "flex", alignItems: "center", justifyContent: "center" }}>
             {stage >= 2 && <Ring pct={Math.round(pct)} size={80} stroke={7} color={color} />}
@@ -789,7 +825,7 @@ function AchievementScreen({ score, total, onRestart, onHome }) {
 
         <div style={{ display: "flex", gap: 10 }}>
           <Btn onClick={onRestart} variant="outline" style={{ flex: 1, padding: "12px" }}>
-            <Icon.Refresh width={15} height={15} style={{ color: "#2563EB" }} /> Again
+            <Icon.Refresh width={15} height={15} style={{ color: "#1848c8" }} /> Again
           </Btn>
           <Btn onClick={onHome} variant="primary" style={{ flex: 1.4, padding: "12px" }}>
             <Icon.Home width={15} height={15} style={{ color: "#fff" }} /> Home
@@ -856,7 +892,6 @@ export default function GestureRecognitionFlow({ nav }) {
       setSignIdx(i => i + 1);
       setPhase("ready");
     } else {
-      // Show pre-achievement animation before trophy screen
       setShowPreAnim(true);
     }
   };
@@ -864,7 +899,6 @@ export default function GestureRecognitionFlow({ nav }) {
   const handleRetry = () => { clearTimeout(timerRef.current); setPhase("ready"); };
   const handleRestart = () => { setSignIdx(0); setScore(0); setPhase("ready"); setScreen("practice"); };
 
-  // Pre-achievement overlay shown on top of practice screen (contained in app)
   if (showPreAnim) {
     return (
       <div style={{
@@ -919,11 +953,12 @@ _style.textContent = `
   @keyframes senyaBounce  { 0%{transform:translateY(0) scale(1)} 100%{transform:translateY(-10px) scale(1.04)} }
   @keyframes trophyBounce { 0%{transform:translateY(0)} 35%{transform:translateY(-16px)} 65%{transform:translateY(-7px)} 100%{transform:translateY(0)} }
   @keyframes starPop      { 0%{transform:scale(0) rotate(-30deg);opacity:0} 100%{transform:scale(1) rotate(0);opacity:1} }
-  @keyframes fadeUp       { 0%{transform:translateY(18px);opacity:0} 100%{transform:translateY(0);opacity:1} }
   @keyframes slideUpIn    { 0%{transform:translateY(10px);opacity:0} 100%{transform:translateY(0);opacity:1} }
   @keyframes countUp      { 0%{transform:scale(0.5) translateY(20px);opacity:0} 100%{transform:scale(1) translateY(0);opacity:1} }
   @keyframes hintPop      { 0%{transform:translateX(-50%) scale(0.85);opacity:0} 100%{transform:translateX(-50%) scale(1);opacity:1} }
   @keyframes confettiBurst{ 0%{transform:translate(0,0) rotate(0deg);opacity:1} 100%{transform:translate(var(--dx),var(--dy)) rotate(540deg);opacity:0} }
   @keyframes senyaThink   { 0%,100%{transform:rotate(0deg)} 25%{transform:rotate(-4deg)} 75%{transform:rotate(4deg)} }
+  @keyframes senyaCelebrate{ 0%{transform:scale(1) rotate(0deg)} 50%{transform:scale(1.2) rotate(8deg)} 100%{transform:scale(1) rotate(0deg)} }
+  @keyframes senyaShake    { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
 `;
 document.head.appendChild(_style);
