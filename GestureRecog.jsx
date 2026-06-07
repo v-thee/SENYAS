@@ -10,6 +10,20 @@ const signs = [
   { letter: "E", hint: "All fingers curled down toward palm, thumb tucked under" },
 ];
 
+// Student rankings data
+const STUDENT_RANKINGS = [
+  { name: "Maria Santos", score: 95, rank: 1, avatar: "MS", isCurrentUser: false },
+  { name: "Juan Dela Cruz", score: 88, rank: 2, avatar: "JD", isCurrentUser: false },
+  { name: "Jose Rizal", score: 85, rank: 3, avatar: "JR", isCurrentUser: false },
+  { name: "Andres Bonifacio", score: 82, rank: 4, avatar: "AB", isCurrentUser: false },
+  { name: "Gabriela Silang", score: 78, rank: 5, avatar: "GS", isCurrentUser: false },
+  { name: "Lapu-Lapu", score: 72, rank: 6, avatar: "LL", isCurrentUser: false },
+  { name: "Emilio Aguinaldo", score: 68, rank: 7, avatar: "EA", isCurrentUser: false },
+  { name: "Melchora Aquino", score: 65, rank: 8, avatar: "MA", isCurrentUser: false },
+  { name: "You", score: 60, rank: 9, avatar: "⭐", isCurrentUser: true },
+  { name: "Gregorio Del Pilar", score: 55, rank: 10, avatar: "GD", isCurrentUser: false },
+];
+
 // Custom image components for lesson icons
 function AlphabetLessonImage({ size = 22 }) {
   return (
@@ -164,6 +178,46 @@ const Icon = {
       <path d="M13.73 21a2 2 0 01-3.46 0"/>
     </svg>
   ),
+  Flame: (p) => (
+    <svg {...p} viewBox="0 0 24 24" fill="currentColor" stroke="none">
+      <path d="M12 2c0 6-8 8-8 14a8 8 0 0016 0C20 10 12 8 12 2z"/>
+    </svg>
+  ),
+  Exit: (p) => (
+    <svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+      <polyline points="16 17 21 12 16 7"/>
+      <line x1="21" y1="12" x2="9" y2="12"/>
+    </svg>
+  ),
+  Award: (p) => (
+    <svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="8" r="6"/>
+      <path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/>
+    </svg>
+  ),
+  Target: (p) => (
+    <svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="10"/>
+      <circle cx="12" cy="12" r="6"/>
+      <circle cx="12" cy="12" r="2"/>
+    </svg>
+  ),
+  Crown: (p) => (
+    <svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M2 4L7 9L12 4L17 9L22 4L19 20H5L2 4Z"/>
+      <circle cx="5" cy="5" r="1" fill="currentColor"/>
+      <circle cx="12" cy="5" r="1" fill="currentColor"/>
+      <circle cx="19" cy="5" r="1" fill="currentColor"/>
+    </svg>
+  ),
+  Medal: (p) => (
+    <svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 15C15.866 15 19 11.866 19 8C19 4.13401 15.866 1 12 1C8.13401 1 5 4.13401 5 8C5 11.866 8.13401 15 12 15Z"/>
+      <path d="M12 15V23"/>
+      <path d="M9 21L12 18L15 21"/>
+    </svg>
+  ),
 };
 
 // Custom lesson icon component that returns either image or SVG
@@ -174,7 +228,6 @@ function LessonIcon({ id, size = 22, color = "#2563EB" }) {
   if (id === "numbers") {
     return <NumbersLessonImage size={size} />;
   }
-  // Fallback to SVG icons for other lessons
   if (id === "words") {
     return <Icon.Book width={size} height={size} style={{ color }} />;
   }
@@ -191,8 +244,117 @@ const LESSONS = [
   { id: "phrases",  title: "Sentences",   sub: "Full phrases",       progress: 0,  locked: true,  color: "#6B7280", bg: "#F9FAFB" },
 ];
 
+// PressableButton component for modal
+function PressableButton({ onClick, style, children, disabled }) {
+  const [pressed, setPressed] = useState(false);
+  return (
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      onMouseDown={() => setPressed(true)}
+      onMouseUp={() => setPressed(false)}
+      onMouseLeave={() => setPressed(false)}
+      onTouchStart={() => setPressed(true)}
+      onTouchEnd={() => setPressed(false)}
+      style={{
+        ...style,
+        transform: pressed ? "scale(0.97)" : "scale(1)",
+        transition: "transform 0.12s ease",
+        cursor: disabled ? "not-allowed" : "pointer",
+        outline: "none",
+      }}
+    >
+      {children}
+    </button>
+  );
+}
+
+// Exit Confirmation Modal
+function ExitConfirmModal({ isOpen, onClose, onConfirm }) {
+  if (!isOpen) return null;
+
+  return (
+    <>
+      <div style={{
+        position: "fixed", inset: 0,
+        background: "rgba(0,0,0,0.45)",
+        backdropFilter: "blur(5px)",
+        zIndex: 1200,
+      }} onClick={onClose} />
+      <div style={{
+        position: "fixed", top: "50%", left: "50%",
+        transform: "translate(-50%, -50%)",
+        width: "88%", maxWidth: 340,
+        background: "rgba(255,255,255,0.97)",
+        backdropFilter: "blur(20px)",
+        borderRadius: 28,
+        padding: "28px 24px 24px",
+        zIndex: 1201,
+        boxShadow: "0 20px 48px rgba(0,0,0,0.18)",
+        border: "1px solid rgba(255,255,255,0.6)",
+        animation: "modalPopIn 0.3s cubic-bezier(0.34,1.3,0.64,1)",
+        textAlign: "center",
+      }} onClick={e => e.stopPropagation()}>
+        <div style={{
+          width: 60, height: 60, borderRadius: "50%",
+          background: "rgba(239,68,68,0.10)",
+          border: "1.5px solid rgba(239,68,68,0.18)",
+          display: "flex", alignItems: "center", justifyContent: "center",
+          margin: "0 auto 16px",
+        }}>
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#DC2626" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+            <polyline points="16 17 21 12 16 7"/>
+            <line x1="21" y1="12" x2="9" y2="12"/>
+          </svg>
+        </div>
+        <h3 style={{
+          fontSize: 20, fontWeight: 800, color: "#0f3172",
+          fontFamily: "var(--font-head)", marginBottom: 8,
+        }}>
+          Exit Practice?
+        </h3>
+        <p style={{
+          fontSize: 13, color: "#6B7280", fontWeight: 500,
+          lineHeight: 1.55, marginBottom: 24,
+        }}>
+          Your progress will be lost. Are you sure you want to exit?
+        </p>
+        <div style={{ display: "flex", gap: 12 }}>
+          <PressableButton onClick={onClose} style={{
+            flex: 1, padding: "13px",
+            background: "rgba(15,49,114,0.07)",
+            border: "1px solid rgba(15,49,114,0.10)",
+            borderRadius: 40, fontSize: 14, fontWeight: 700,
+            color: "#0f3172",
+          }}>
+            Stay
+          </PressableButton>
+          <PressableButton onClick={onConfirm} style={{
+            flex: 1.3, padding: "13px",
+            background: "linear-gradient(135deg, #DC2626, #EF4444)",
+            border: "none", borderRadius: 40,
+            fontSize: 14, fontWeight: 700, color: "#fff",
+            boxShadow: "0 4px 14px rgba(220,38,38,0.3)",
+          }}>
+            Exit
+          </PressableButton>
+        </div>
+      </div>
+    </>
+  );
+}
+
+function GlassCard({ children, style }) {
+  return (
+    <div style={{ background:"rgba(255,255,255,0.62)", border:"1px solid rgba(255,255,255,0.85)", borderRadius:20, backdropFilter:"blur(8px)", boxShadow:"0 2px 12px rgba(15,49,114,0.09)", ...style }}>
+      {children}
+    </div>
+  );
+}
+
 /* ── Shared top bar — same across all screens ── */
-function TopBar() {
+function TopBar({ showExit = false, onExitClick }) {
   return (
     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "52px 20px 0" }}>
       <span style={{ color: "#0f3172", fontSize: 22, fontWeight: 800, letterSpacing: 2 }}>SEÑAS</span>
@@ -201,14 +363,36 @@ function TopBar() {
           <Icon.Info width={20} height={20} style={{ color: "#4b7bbb" }} />
         </button>
         <div style={{ background: "rgba(255,255,255,0.7)", borderRadius: 20, padding: "5px 12px", display: "flex", alignItems: "center", gap: 5, color: "#0f3172", fontSize: 13, fontWeight: 700, boxShadow: "0 1px 4px rgba(0,0,0,0.08)" }}>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="#fb923c">
-            <path d="M12 2c0 6-8 8-8 14a8 8 0 0016 0C20 10 12 8 12 2z"/>
-          </svg>
+          <Icon.Flame width={14} height={14} style={{ color: "#fb923c" }} />
           12
         </div>
         <button style={{ background: "none", border: "none", cursor: "pointer", color: "#4b7bbb", padding: 2 }}>
           <Icon.Bell width={20} height={20} style={{ color: "#4b7bbb" }} />
         </button>
+        {showExit && (
+          <button
+            onClick={onExitClick}
+            style={{
+              background:"rgba(255,255,255,0.7)",
+              border:"1px solid rgba(255,255,255,0.85)",
+              borderRadius:12,
+              cursor:"pointer",
+              padding:"6px 10px",
+              display:"flex",
+              alignItems:"center",
+              gap:5,
+              color:"#0f3172",
+              fontSize:12,
+              fontWeight:700,
+              boxShadow:"0 1px 4px rgba(0,0,0,0.08)",
+              backdropFilter:"blur(8px)",
+              WebkitTapHighlightColor:"transparent",
+            }}
+          >
+            <Icon.Exit width={14} height={14} style={{ color:"#4b7bbb" }} />
+            Exit
+          </button>
+        )}
       </div>
     </div>
   );
@@ -218,10 +402,10 @@ function TopBar() {
 function Btn({ onClick, children, variant = "primary", disabled, style: sx = {} }) {
   const [pressed, setPressed] = useState(false);
   const base = {
-    primary: { background: "#1848c8", color: "#fff" },
+    primary: { background: "linear-gradient(135deg,#1035a0,#1848c8,#2563EB)", color: "#fff", boxShadow: "0 5px 18px rgba(15,49,114,0.28)" },
     success: { background: "#059669", color: "#fff" },
     danger:  { background: "#DC2626", color: "#fff" },
-    ghost:   { background: "#F1F5F9", color: "#334155", border: "1px solid #E2E8F0" },
+    ghost:   { background: "rgba(255,255,255,0.62)", color: "#0f3172", border: "1px solid rgba(255,255,255,0.85)", backdropFilter: "blur(8px)" },
     outline: { background: "transparent", color: "#1848c8", border: "2px solid #1848c8" },
   }[variant] || {};
   return (
@@ -397,6 +581,263 @@ function PreAchievementAnim({ score, total, onDone }) {
   );
 }
 
+// Result Screen with Rankings - Matching QuizMC style (FIXED STARS)
+function ResultScreen({ score, total, onRestart, onHome }) {
+  const totalScore = score;
+  const totalQuestions = total;
+  const xpEarned = score * 10;
+  const pct = Math.round((score / totalQuestions) * 100);
+  const stars = pct === 100 ? 3 : pct >= 80 ? 2 : pct >= 50 ? 1 : 0;
+  const [stage, setStage] = useState(0);
+  const [showExitConfirm, setShowExitConfirm] = useState(false);
+
+  useEffect(() => {
+    const t1 = setTimeout(() => setStage(1), 200);
+    const t2 = setTimeout(() => setStage(2), 600);
+    return () => { clearTimeout(t1); clearTimeout(t2); };
+  }, []);
+
+  const { label, color } =
+    pct === 100 ? { label: "Perfect Score!", color: "#F59E0B" } :
+    pct >= 80 ? { label: "Excellent!", color: "#10B981" } :
+    pct >= 60 ? { label: "Good Job!", color: "#2563EB" } :
+    { label: "Keep Practicing!", color: "#8B5CF6" };
+
+  const getRankIcon = (rank) => {
+    if (rank === 1) return <Icon.Crown width={14} height={14} style={{ color: "#F59E0B" }} />;
+    if (rank === 2) return <Icon.Medal width={14} height={14} style={{ color: "#9CA3AF" }} />;
+    if (rank === 3) return <Icon.Medal width={14} height={14} style={{ color: "#CD7F32" }} />;
+    return <span style={{ fontSize: 12, fontWeight: 700, color: "#9CA3AF", width: 14, textAlign: "center" }}>{rank}</span>;
+  };
+
+  const handleExit = () => {
+    setShowExitConfirm(true);
+  };
+
+  const handleConfirmExit = () => {
+    setShowExitConfirm(false);
+    onHome();
+  };
+
+  const resultMsgs = [
+    { icon: "Sparkle", text: "Incredible! You answered everything perfectly. You're a true SEÑAS star!" },
+    { icon: "Award", text: "Amazing work! You're really getting the hang of FSL signs." },
+    { icon: "Target", text: "Good effort! Review the ones you missed and try again!" },
+    { icon: "Dumbbell", text: "Don't give up! Every mistake is a step toward mastery." },
+  ];
+
+  const msgIdx = pct === 100 ? 0 : pct >= 80 ? 1 : pct >= 60 ? 2 : 3;
+  const msg = resultMsgs[msgIdx];
+  const MsgIcon = Icon[msg.icon];
+
+  return (
+    <div style={{
+      minHeight: "100vh",
+      background: "linear-gradient(160deg,#a8d4f5 0%,#c5e3f7 35%,#daeefb 65%,#f0f8ff 100%)",
+      display: "flex", flexDirection: "column",
+    }}>
+      <ExitConfirmModal 
+        isOpen={showExitConfirm}
+        onClose={() => setShowExitConfirm(false)}
+        onConfirm={handleConfirmExit}
+      />
+      <TopBar showExit={true} onExitClick={handleExit} />
+      
+      <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: 20, position: "relative" }}>
+        {stage >= 1 && <Confetti count={36} />}
+
+        <div style={{ maxWidth: 360, width: "100%" }}>
+          {/* Result Card */}
+          <GlassCard style={{ padding: "32px 24px", textAlign: "center", position: "relative", overflow: "hidden", marginBottom: 16 }}>
+            <img src={senya_teaching} alt="Senya" style={{
+              width: 100, height: 100, objectFit: "contain",
+              filter: "drop-shadow(0 5px 16px rgba(15,49,114,0.18))",
+              animation: stage >= 1 ? "senyaJump 0.6s cubic-bezier(0.34,1.5,0.64,1)" : "none",
+              marginBottom: 4,
+            }} />
+
+            <div style={{ animation: stage >= 2 ? "trophyBounce 0.7s cubic-bezier(0.34,1.2,0.64,1) 0.2s both" : "none", marginBottom: 8 }}>
+              <Icon.Trophy width={48} height={48} style={{ color: "#fbbf24" }} />
+            </div>
+
+            {/* Stars - FIXED to match QuizMC */}
+            <div style={{ display: "flex", justifyContent: "center", gap: 6, marginBottom: 10 }}>
+              {[0, 1, 2].map(i => (
+                <div key={i} style={{ animation: i < stars ? `starPop 0.4s cubic-bezier(0.34,1.4,0.64,1) ${0.3 + i * 0.12}s both` : "none" }}>
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <polygon 
+                      points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" 
+                      fill={i < stars ? "#fbbf24" : "#E5E7EB"} 
+                      stroke={i < stars ? "#F59E0B" : "#E5E7EB"} 
+                    />
+                  </svg>
+                </div>
+              ))}
+            </div>
+
+            <h2 style={{ fontSize: 24, fontWeight: 800, color, marginBottom: 4, fontFamily: "var(--font-head)" }}>{label}</h2>
+
+            <div style={{ display: "flex", alignItems: "center", margin: "16px 0", background: "rgba(15,49,114,0.05)", borderRadius: 16, overflow: "hidden" }}>
+              {[
+                { val: pct + "%", sub: "Accuracy" },
+                { val: `${totalScore}/${totalQuestions}`, sub: "Correct" },
+                { val: xpEarned, sub: "XP earned", color: "#F59E0B" },
+              ].map((s, i) => (
+                <div key={i} style={{ flex: 1, padding: "14px 8px", textAlign: "center", borderRight: i < 2 ? "1px solid rgba(15,49,114,0.08)" : "none" }}>
+                  <p style={{ fontSize: 28, fontWeight: 900, color: s.color || "#0f3172", lineHeight: 1 }}>{s.val}</p>
+                  <p style={{ fontSize: 11, color: "#4b7bbb", fontWeight: 600, marginTop: 2 }}>{s.sub}</p>
+                </div>
+              ))}
+            </div>
+
+            <div style={{ background: "rgba(15,49,114,0.05)", borderRadius: 14, padding: "12px 14px", marginBottom: 0, textAlign: "left", display: "flex", gap: 10, alignItems: "flex-start" }}>
+              <img src={senya_logo} alt="Senya" style={{ width: 36, height: 36, objectFit: "contain", flexShrink: 0 }} />
+              <div style={{ flex: 1 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 5, marginBottom: 4 }}>
+                  {MsgIcon && <MsgIcon width={13} height={13} style={{ color: color, flexShrink: 0 }} />}
+                  <p style={{ fontSize: 12.5, color: "#0f3172", lineHeight: 1.55, margin: 0, fontWeight: 500 }}>{msg.text}</p>
+                </div>
+              </div>
+            </div>
+
+            <div style={{ display: "flex", gap: 10, marginTop: 20 }}>
+              <Btn onClick={onHome} variant="ghost" style={{ flex: 1, padding: "13px" }}>
+                <Icon.Home width={15} height={15} style={{ color: "#0f3172" }} /> Home
+              </Btn>
+              <Btn onClick={onRestart} variant="primary" style={{ flex: 1.4, padding: "13px" }}>
+                <Icon.Refresh width={15} height={15} style={{ color: "#fff" }} /> Try Again
+              </Btn>
+            </div>
+          </GlassCard>
+
+          {/* Rankings Section */}
+          <GlassCard style={{ padding: "20px 20px", marginBottom: 20 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
+              <Icon.Award width={20} height={20} style={{ color: "#F59E0B" }} />
+              <h3 style={{ fontSize: 16, fontWeight: 800, color: "#0f3172", margin: 0 }}>Class Rankings</h3>
+              <span style={{ fontSize: 10, fontWeight: 600, color: "#4b7bbb", background: "rgba(15,49,114,0.08)", borderRadius: 99, padding: "3px 8px", marginLeft: "auto" }}>
+                Top {STUDENT_RANKINGS.length}
+              </span>
+            </div>
+
+            <div style={{
+              display: "grid",
+              gridTemplateColumns: "48px 1fr 64px",
+              padding: "8px 0",
+              borderBottom: "1px solid rgba(15,49,114,0.08)",
+              marginBottom: 8,
+              fontSize: 10,
+              fontWeight: 700,
+              color: "#4b7bbb",
+              textTransform: "uppercase",
+              letterSpacing: 0.5,
+            }}>
+              <span>Rank</span>
+              <span>Student</span>
+              <span style={{ textAlign: "right" }}>Score</span>
+            </div>
+
+            <div>
+              {STUDENT_RANKINGS.map((student) => {
+                const updatedStudent = student.isCurrentUser 
+                  ? { ...student, score: xpEarned }
+                  : student;
+                
+                return (
+                  <div
+                    key={student.rank}
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "48px 1fr 64px",
+                      alignItems: "center",
+                      padding: "10px 0",
+                      borderRadius: 10,
+                      background: student.isCurrentUser ? "rgba(37,99,235,0.08)" : "transparent",
+                      transition: "background 0.2s",
+                      borderBottom: student.rank !== STUDENT_RANKINGS.length ? "1px solid rgba(15,49,114,0.04)" : "none",
+                    }}
+                  >
+                    <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                      {getRankIcon(student.rank)}
+                    </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <div style={{
+                        width: 28,
+                        height: 28,
+                        borderRadius: 99,
+                        background: student.isCurrentUser ? "#2563EB" : "rgba(15,49,114,0.10)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontSize: 11,
+                        fontWeight: 700,
+                        color: student.isCurrentUser ? "#fff" : "#4b7bbb",
+                      }}>
+                        {student.avatar}
+                      </div>
+                      <span style={{
+                        fontSize: 13,
+                        fontWeight: student.isCurrentUser ? 800 : 600,
+                        color: student.isCurrentUser ? "#2563EB" : "#0f3172",
+                      }}>
+                        {student.name}
+                        {student.isCurrentUser && (
+                          <span style={{
+                            fontSize: 9,
+                            fontWeight: 600,
+                            color: "#2563EB",
+                            background: "rgba(37,99,235,0.12)",
+                            borderRadius: 99,
+                            padding: "2px 6px",
+                            marginLeft: 8,
+                          }}>You</span>
+                        )}
+                      </span>
+                    </div>
+                    <div style={{
+                      textAlign: "right",
+                      fontWeight: student.isCurrentUser ? 800 : 600,
+                      color: student.isCurrentUser ? "#2563EB" : "#0f3172",
+                    }}>
+                      {student.isCurrentUser ? xpEarned : student.score}
+                      <span style={{ fontSize: 9, color: "#9CA3AF", marginLeft: 2 }}>pts</span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div style={{
+              marginTop: 16,
+              padding: "12px 0 8px",
+              borderTop: "1px solid rgba(15,49,114,0.08)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                <Icon.Target width={14} height={14} style={{ color: "#2563EB" }} />
+                <span style={{ fontSize: 11, fontWeight: 600, color: "#4b7bbb" }}>Your Position</span>
+              </div>
+              <div style={{
+                background: "rgba(37,99,235,0.10)",
+                borderRadius: 99,
+                padding: "4px 12px",
+                display: "flex",
+                alignItems: "center",
+                gap: 4,
+              }}>
+                <span style={{ fontSize: 11, fontWeight: 800, color: "#2563EB" }}>#{STUDENT_RANKINGS.find(s => s.isCurrentUser)?.rank}</span>
+                <span style={{ fontSize: 10, color: "#4b7bbb" }}>out of {STUDENT_RANKINGS.length}</span>
+              </div>
+            </div>
+          </GlassCard>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ══════════════════════════════════════════════════════════════════════
    INTRO SCREEN
 ══════════════════════════════════════════════════════════════════════ */
@@ -514,6 +955,7 @@ function PermissionScreen({ onAllow, onBack, error }) {
 ══════════════════════════════════════════════════════════════════════ */
 function PracticeScreen({ onBack, videoRef, phase, sign, signIdx, score, totalSigns, onDetect, onNext, onRetry, showResult, resultSuccess }) {
   const [hintOpen, setHintOpen] = useState(false);
+  const [showExitConfirm, setShowExitConfirm] = useState(false);
 
   const borderColor = {
     ready:     "#c7ddf5",
@@ -529,6 +971,15 @@ function PracticeScreen({ onBack, videoRef, phase, sign, signIdx, score, totalSi
     ready:     "rgba(15,49,114,0.10)",
   }[phase] || "rgba(15,49,114,0.10)";
 
+  const handleExit = () => {
+    setShowExitConfirm(true);
+  };
+
+  const handleConfirmExit = () => {
+    setShowExitConfirm(false);
+    onBack();
+  };
+
   return (
     <div style={{
       height: "100vh", overflow: "hidden",
@@ -536,6 +987,12 @@ function PracticeScreen({ onBack, videoRef, phase, sign, signIdx, score, totalSi
       display: "flex", flexDirection: "column",
       position: "relative",
     }}>
+      <ExitConfirmModal 
+        isOpen={showExitConfirm}
+        onClose={() => setShowExitConfirm(false)}
+        onConfirm={handleConfirmExit}
+      />
+
       <ResultOverlay visible={showResult} success={resultSuccess} />
 
       <div style={{ padding: "48px 16px 10px", display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
@@ -798,6 +1255,7 @@ function PracticeScreen({ onBack, videoRef, phase, sign, signIdx, score, totalSi
 function AchievementScreen({ score, total, onRestart, onHome }) {
   const pct = (score / total) * 100;
   const [stage, setStage] = useState(0);
+  const [showExitConfirm, setShowExitConfirm] = useState(false);
 
   useEffect(() => {
     const t1 = setTimeout(() => setStage(1), 200);
@@ -813,13 +1271,27 @@ function AchievementScreen({ score, total, onRestart, onHome }) {
 
   const stars = pct === 100 ? 3 : pct >= 80 ? 2 : pct >= 50 ? 1 : 0;
 
+  const handleExit = () => {
+    setShowExitConfirm(true);
+  };
+
+  const handleConfirmExit = () => {
+    setShowExitConfirm(false);
+    onHome();
+  };
+
   return (
     <div style={{
       minHeight: "100vh",
       background: "linear-gradient(160deg, #a8d4f5 0%, #c5e3f7 35%, #f0f8ff 100%)",
       display: "flex", flexDirection: "column",
     }}>
-      <TopBar />
+      <ExitConfirmModal 
+        isOpen={showExitConfirm}
+        onClose={() => setShowExitConfirm(false)}
+        onConfirm={handleConfirmExit}
+      />
+      <TopBar showExit={true} onExitClick={handleExit} />
       <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: 20, position: "relative" }}>
         {stage >= 1 && <Confetti count={36} />}
         <div style={{
@@ -896,6 +1368,7 @@ export default function GestureRecognitionFlow({ nav }) {
   const [showResult, setShowResult]       = useState(false);
   const [resultSuccess, setResultSuccess] = useState(false);
   const [showPreAnim, setShowPreAnim]     = useState(false);
+  const [showResultScreen, setShowResultScreen] = useState(false);
   const videoRef  = useRef(null);
   const streamRef = useRef(null);
   const timerRef  = useRef(null);
@@ -950,6 +1423,31 @@ export default function GestureRecognitionFlow({ nav }) {
   if (screen === "intro")       return <IntroScreen nav={nav} onSelect={() => setScreen("permission")} />;
   if (screen === "permission")  return <PermissionScreen onAllow={startCamera} onBack={() => setScreen("intro")} error={camError} />;
   if (screen === "achievement") return <AchievementScreen score={score} total={totalSigns} onRestart={handleRestart} onHome={() => { setSignIdx(0); setScore(0); setPhase("ready"); setScreen("intro"); }} />;
+  if (showPreAnim) {
+    return (
+      <PreAchievementAnim
+        score={score}
+        total={totalSigns}
+        onDone={() => { setShowPreAnim(false); setShowResultScreen(true); }}
+      />
+    );
+  }
+  if (showResultScreen) {
+    return (
+      <ResultScreen
+        score={score}
+        total={totalSigns}
+        onRestart={() => {
+          setSignIdx(0);
+          setScore(0);
+          setPhase("ready");
+          setShowResultScreen(false);
+          setScreen("practice");
+        }}
+        onHome={() => nav("dashboard")}
+      />
+    );
+  }
 
   return (
     <div style={{ position: "relative", height: "100vh", overflow: "hidden" }}>
@@ -967,13 +1465,6 @@ export default function GestureRecognitionFlow({ nav }) {
         showResult={showResult}
         resultSuccess={resultSuccess}
       />
-      {showPreAnim && (
-        <PreAchievementAnim
-          score={score}
-          total={totalSigns}
-          onDone={() => { setShowPreAnim(false); setScreen("achievement"); }}
-        />
-      )}
     </div>
   );
 }
@@ -998,5 +1489,17 @@ _style.textContent = `
   @keyframes countUp      { 0%{transform:scale(0.5) translateY(20px);opacity:0} 100%{transform:scale(1) translateY(0);opacity:1} }
   @keyframes hintPop      { 0%{transform:translateX(-50%) scale(0.85);opacity:0} 100%{transform:translateX(-50%) scale(1);opacity:1} }
   @keyframes confettiBurst{ 0%{transform:translate(0,0) rotate(0deg);opacity:1} 100%{transform:translate(var(--dx),var(--dy)) rotate(540deg);opacity:0} }
+  @keyframes modalPopIn {
+    from { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
+    to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  }
+  @keyframes senyaJump {
+    0% { transform: scale(0) rotate(-15deg); opacity: 0; }
+    70% { transform: scale(1.1) rotate(4deg); }
+    100% { transform: scale(1) rotate(0); opacity: 1; }
+  }
 `;
-document.head.appendChild(_style);
+if (!document.head.querySelector("#gesture-styles")) {
+  _style.id = "gesture-styles";
+  document.head.appendChild(_style);
+}
