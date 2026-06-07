@@ -10,6 +10,31 @@ const signs = [
   { letter: "E", hint: "All fingers curled down toward palm, thumb tucked under" },
 ];
 
+// Custom image components for lesson icons
+function AlphabetLessonImage({ size = 22 }) {
+  return (
+    <img 
+      src={`/img/alphabet.png`}
+      alt="Alphabet"
+      width={size}
+      height={size}
+      style={{ objectFit: "contain" }}
+    />
+  );
+}
+
+function NumbersLessonImage({ size = 22 }) {
+  return (
+    <img 
+      src={`/img/numbers.png`}
+      alt="Numbers"
+      width={size}
+      height={size}
+      style={{ objectFit: "contain" }}
+    />
+  );
+}
+
 /* ── Icons ─────────────────────────────────────────────────────────── */
 const Icon = {
   Camera: (p) => (
@@ -141,11 +166,29 @@ const Icon = {
   ),
 };
 
+// Custom lesson icon component that returns either image or SVG
+function LessonIcon({ id, size = 22, color = "#2563EB" }) {
+  if (id === "alphabet") {
+    return <AlphabetLessonImage size={size} />;
+  }
+  if (id === "numbers") {
+    return <NumbersLessonImage size={size} />;
+  }
+  // Fallback to SVG icons for other lessons
+  if (id === "words") {
+    return <Icon.Book width={size} height={size} style={{ color }} />;
+  }
+  if (id === "phrases") {
+    return <Icon.Msg width={size} height={size} style={{ color }} />;
+  }
+  return null;
+}
+
 const LESSONS = [
-  { id: "alphabet", title: "Alphabet",    sub: "Fingerspelling A–Z", progress: 20, Icon: Icon.Abc,  locked: false, color: "#2563EB", bg: "#EFF6FF" },
-  { id: "numbers",  title: "Numbers",     sub: "Counting 1–100",     progress: 1,  Icon: Icon.Hash, locked: false, color: "#059669", bg: "#ECFDF5" },
-  { id: "words",    title: "Basic Words", sub: "Common signs",       progress: 0,  Icon: Icon.Book, locked: true,  color: "#6B7280", bg: "#F9FAFB" },
-  { id: "phrases",  title: "Sentences",   sub: "Full phrases",       progress: 0,  Icon: Icon.Msg,  locked: true,  color: "#6B7280", bg: "#F9FAFB" },
+  { id: "alphabet", title: "Alphabet",    sub: "Fingerspelling A–Z", progress: 20, locked: false, color: "#2563EB", bg: "#EFF6FF" },
+  { id: "numbers",  title: "Numbers",     sub: "Counting 1–100",     progress: 1,  locked: false, color: "#059669", bg: "#ECFDF5" },
+  { id: "words",    title: "Basic Words", sub: "Common signs",       progress: 0,  locked: true,  color: "#6B7280", bg: "#F9FAFB" },
+  { id: "phrases",  title: "Sentences",   sub: "Full phrases",       progress: 0,  locked: true,  color: "#6B7280", bg: "#F9FAFB" },
 ];
 
 /* ── Shared top bar — same across all screens ── */
@@ -154,18 +197,15 @@ function TopBar() {
     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "52px 20px 0" }}>
       <span style={{ color: "#0f3172", fontSize: 22, fontWeight: 800, letterSpacing: 2 }}>SEÑAS</span>
       <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-        {/* Info */}
         <button style={{ background: "none", border: "none", cursor: "pointer", color: "#4b7bbb", padding: 2 }}>
           <Icon.Info width={20} height={20} style={{ color: "#4b7bbb" }} />
         </button>
-        {/* Streak pill */}
         <div style={{ background: "rgba(255,255,255,0.7)", borderRadius: 20, padding: "5px 12px", display: "flex", alignItems: "center", gap: 5, color: "#0f3172", fontSize: 13, fontWeight: 700, boxShadow: "0 1px 4px rgba(0,0,0,0.08)" }}>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="#fb923c">
             <path d="M12 2c0 6-8 8-8 14a8 8 0 0016 0C20 10 12 8 12 2z"/>
           </svg>
           12
         </div>
-        {/* Bell */}
         <button style={{ background: "none", border: "none", cursor: "pointer", color: "#4b7bbb", padding: 2 }}>
           <Icon.Bell width={20} height={20} style={{ color: "#4b7bbb" }} />
         </button>
@@ -403,7 +443,7 @@ function IntroScreen({ nav, onSelect }) {
             >
               <div style={{ position: "relative", display: "inline-flex", marginBottom: 10 }}>
                 <div style={{ width: 44, height: 44, borderRadius: 12, background: l.bg, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <l.Icon width={22} height={22} style={{ color: l.color }} />
+                  <LessonIcon id={l.id} size={24} color={l.color} />
                 </div>
                 {l.locked && (
                   <div style={{ position: "absolute", top: -5, right: -8, background: "#9CA3AF", borderRadius: "50%", width: 18, height: 18, display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -470,7 +510,7 @@ function PermissionScreen({ onAllow, onBack, error }) {
 }
 
 /* ══════════════════════════════════════════════════════════════════════
-   PRACTICE SCREEN — IMPROVED UI + larger Senya
+   PRACTICE SCREEN
 ══════════════════════════════════════════════════════════════════════ */
 function PracticeScreen({ onBack, videoRef, phase, sign, signIdx, score, totalSigns, onDetect, onNext, onRetry, showResult, resultSuccess }) {
   const [hintOpen, setHintOpen] = useState(false);
@@ -498,7 +538,6 @@ function PracticeScreen({ onBack, videoRef, phase, sign, signIdx, score, totalSi
     }}>
       <ResultOverlay visible={showResult} success={resultSuccess} />
 
-      {/* ── Header ── */}
       <div style={{ padding: "48px 16px 10px", display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
         <button onClick={onBack} style={{
           background: "rgba(255,255,255,0.6)", border: "1px solid rgba(255,255,255,0.9)",
@@ -516,7 +555,6 @@ function PracticeScreen({ onBack, videoRef, phase, sign, signIdx, score, totalSi
             </span>
             <span style={{ color: "#f59e0b", fontSize: 11, fontWeight: 700 }}>{score} correct</span>
           </div>
-          {/* Segmented progress dots */}
           <div style={{ display: "flex", gap: 3 }}>
             {signs.map((_, i) => (
               <div key={i} style={{
@@ -532,7 +570,6 @@ function PracticeScreen({ onBack, videoRef, phase, sign, signIdx, score, totalSi
           </div>
         </div>
 
-        {/* Score badge */}
         <div style={{
           background: "linear-gradient(135deg,#1035a0,#1848c8)", borderRadius: 14,
           padding: "6px 14px", flexShrink: 0,
@@ -542,7 +579,6 @@ function PracticeScreen({ onBack, videoRef, phase, sign, signIdx, score, totalSi
         </div>
       </div>
 
-      {/* ── Letter pill + hint ── */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, padding: "0 16px 10px", flexShrink: 0 }}>
         <div style={{
           background: "linear-gradient(135deg,#1035a0,#1848c8)",
@@ -589,7 +625,6 @@ function PracticeScreen({ onBack, videoRef, phase, sign, signIdx, score, totalSi
         </div>
       </div>
 
-      {/* ── Camera frame ── */}
       <div style={{ padding: "0 14px", flexShrink: 0 }}>
         <div style={{
           position: "relative", borderRadius: 24, overflow: "hidden",
@@ -601,10 +636,8 @@ function PracticeScreen({ onBack, videoRef, phase, sign, signIdx, score, totalSi
         }}>
           <video ref={videoRef} autoPlay playsInline muted style={{ width: "100%", height: "100%", objectFit: "cover", transform: "scaleX(-1)", display: "block" }} />
 
-          {/* Subtle grid overlay */}
           <div style={{ position: "absolute", inset: 0, backgroundImage: "linear-gradient(rgba(15,49,114,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(15,49,114,0.03) 1px,transparent 1px)", backgroundSize: "30px 30px", pointerEvents: "none" }} />
 
-          {/* Corner brackets */}
           {["tl","tr","bl","br"].map(c => (
             <div key={c} style={{
               position: "absolute",
@@ -620,7 +653,6 @@ function PracticeScreen({ onBack, videoRef, phase, sign, signIdx, score, totalSi
             }} />
           ))}
 
-          {/* Scan line */}
           {phase === "detecting" && (
             <div style={{
               position: "absolute", left: 0, right: 0, height: 3,
@@ -630,7 +662,6 @@ function PracticeScreen({ onBack, videoRef, phase, sign, signIdx, score, totalSi
             }} />
           )}
 
-          {/* Scanning pill */}
           {phase === "detecting" && (
             <div style={{ position: "absolute", top: 10, left: "50%", transform: "translateX(-50%)", background: "rgba(245,158,11,0.96)", borderRadius: 20, padding: "5px 14px", display: "flex", alignItems: "center", gap: 6, backdropFilter: "blur(8px)", boxShadow: "0 2px 10px rgba(245,158,11,0.4)" }}>
               <div style={{ width: 7, height: 7, borderRadius: "50%", background: "#fff", animation: "blink 0.7s ease-in-out infinite" }} />
@@ -638,7 +669,6 @@ function PracticeScreen({ onBack, videoRef, phase, sign, signIdx, score, totalSi
             </div>
           )}
 
-          {/* Success/fail pill */}
           {(phase === "success" || phase === "fail") && (
             <div style={{
               position: "absolute", bottom: 10, left: 10, right: 10,
@@ -661,7 +691,6 @@ function PracticeScreen({ onBack, videoRef, phase, sign, signIdx, score, totalSi
         </div>
       </div>
 
-      {/* ── Senya + feedback ── */}
       <div style={{ flex: 1, padding: "10px 14px 0", display: "flex", alignItems: "center", gap: 12, minHeight: 0 }}>
         <div style={{ flexShrink: 0, display: "flex", alignItems: "flex-end", justifyContent: "center" }}>
           <img
@@ -681,7 +710,6 @@ function PracticeScreen({ onBack, videoRef, phase, sign, signIdx, score, totalSi
           />
         </div>
 
-        {/* Speech bubble */}
         <div style={{
           flex: 1,
           position: "relative",
@@ -734,7 +762,6 @@ function PracticeScreen({ onBack, videoRef, phase, sign, signIdx, score, totalSi
         </div>
       </div>
 
-      {/* ── Action buttons ── */}
       <div style={{ padding: "10px 14px 28px", flexShrink: 0 }}>
         {phase === "ready" && (
           <Btn onClick={onDetect} variant="primary" style={{ width: "100%", padding: "15px", boxShadow: "0 5px 18px rgba(15,49,114,0.28)" }}>

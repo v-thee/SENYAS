@@ -8,7 +8,7 @@ import {
 
 const lessons = [
   { title: "FSL Alphabet",    icon: "alpha", progress: 65,  color: "#2563EB", tag: "In Progress" },
-  { title: "Greetings",       icon: "greet", progress: 100, color: "#2563EB", tag: "Completed"   },
+  { title: "Greetings",       icon: "greet", progress: 65,  color: "#2563EB", tag: "In Progress" },  // CHANGED: from "Completed" to "In Progress"
   { title: "Numbers 1–10",    icon: "num",   progress: 30,  color: "#2563EB", tag: "In Progress" },
   { title: "Classroom Words", icon: "class", progress: 0,   color: "#6B7280", tag: "Locked"      },
 ];
@@ -27,38 +27,165 @@ function getGreeting() {
   return "Good evening!";
 }
 
+// FSL Alphabet Icon using alphabets.png
+function AlphabetLessonIcon({ size = 44 }) {
+  const imgPath = `/img/alphabet.png`;
+  return (
+    <img 
+      src={imgPath}
+      alt="FSL Alphabet"
+      width={size}
+      height={size}
+      style={{ objectFit: "contain" }}
+      onError={(e) => {
+        console.error("Failed to load image:", imgPath);
+        e.target.style.display = 'none';
+      }}
+    />
+  );
+}
+
+// Greetings Icon using greet.png
+function GreetingsLessonIcon({ size = 44 }) {
+  const imgPath = `/img/greet.png`;
+  return (
+    <img 
+      src={imgPath}
+      alt="Greetings"
+      width={size}
+      height={size}
+      style={{ objectFit: "contain" }}
+      onError={(e) => {
+        console.error("Failed to load image:", imgPath);
+        e.target.style.display = 'none';
+      }}
+    />
+  );
+}
+
+// Numbers Icon using numbers.png
+function NumbersLessonIcon({ size = 44 }) {
+  const imgPath = `/img/numbers.png`;
+  return (
+    <img 
+      src={imgPath}
+      alt="Numbers"
+      width={size}
+      height={size}
+      style={{ objectFit: "contain" }}
+      onError={(e) => {
+        console.error("Failed to load image:", imgPath);
+        e.target.style.display = 'none';
+      }}
+    />
+  );
+}
+
 function LessonIcon({ icon, size = 22 }) {
   switch (icon) {
-    case "alpha": return <AlphabetIcon  size={size} color="#2563EB" />;
-    case "greet": return <GreetingIcon  size={size} color="#2563EB" />;
-    case "num":   return <NumbersIcon   size={size} color="#2563EB" />;
+    case "alpha": return <AlphabetLessonIcon size={36} />;
+    case "greet": return <GreetingsLessonIcon size={36} />;
+    case "num":   return <NumbersLessonIcon size={36} />;
     case "class": return <ClassroomIcon size={size} color="#9CA3AF" />;
     default:      return null;
   }
 }
 
+// Multiple Choice Icon using multiple_choice.png
+function MultipleChoiceIcon({ size = 44 }) {
+  const imgPath = `/img/multiple_choice.png`;
+  return (
+    <img 
+      src={imgPath}
+      alt="Multiple Choice"
+      width={size}
+      height={size}
+      style={{ objectFit: "contain" }}
+      onError={(e) => {
+        console.error("Failed to load image:", imgPath);
+        e.target.style.display = 'none';
+      }}
+    />
+  );
+}
+
+// Drag & Drop Icon using dragNdrop.png
+function DragDropIcon({ size = 44 }) {
+  const imgPath = `/img/dragNdrop.png`;
+  return (
+    <img 
+      src={imgPath}
+      alt="Drag & Drop"
+      width={size}
+      height={size}
+      style={{ objectFit: "contain" }}
+      onError={(e) => {
+        console.error("Failed to load image:", imgPath);
+        e.target.style.display = 'none';
+      }}
+    />
+  );
+}
+
+// Gesture Cam Icon using camera.png
+function CameraIcon({ size = 44 }) {
+  const imgPath = `/img/camera.png`;
+  return (
+    <img 
+      src={imgPath}
+      alt="Gesture Cam"
+      width={size}
+      height={size}
+      style={{ objectFit: "contain" }}
+      onError={(e) => {
+        console.error("Failed to load image:", imgPath);
+        e.target.style.display = 'none';
+      }}
+    />
+  );
+}
+
+// Badge Gallery Icon Component (using badges.png)
+function BadgeGalleryIcon({ size = 44 }) {
+  const imgPath = `/img/badges.png`;
+  return (
+    <img 
+      src={imgPath}
+      alt="badges"
+      width={size}
+      height={size}
+      style={{ objectFit: "contain" }}
+      onError={(e) => {
+        console.error("Failed to load image:", imgPath);
+        e.target.style.display = 'none';
+      }}
+    />
+  );
+}
+
+// Level 1 Badge Icon Component (using level_1.png)
+function LevelOneIcon({ size = 44 }) {
+  const imgPath = `/img/level_1.png`;
+  return (
+    <img 
+      src={imgPath}
+      alt="Level 1"
+      width={size}
+      height={size}
+      style={{ objectFit: "contain" }}
+      onError={(e) => {
+        console.error("Failed to load image:", imgPath);
+        e.target.style.display = 'none';
+      }}
+    />
+  );
+}
+
 function QuickIcon({ icon, color }) {
-  if (icon === "mc") return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-      <rect x="3" y="3" width="18" height="18" rx="2" stroke={color} strokeWidth="2"/>
-      <path d="M9 12l2 2 4-4" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-    </svg>
-  );
-  if (icon === "dnd") return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill={color} opacity="0.9">
-      <rect x="3" y="3" width="8" height="8" rx="1"/>
-      <rect x="13" y="3" width="8" height="8" rx="1"/>
-      <rect x="3" y="13" width="8" height="8" rx="1"/>
-      <rect x="13" y="13" width="8" height="8" rx="1"/>
-    </svg>
-  );
-  if (icon === "cam") return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2">
-      <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/>
-      <circle cx="12" cy="13" r="3"/>
-    </svg>
-  );
-  if (icon === "badge") return <TrophyIcon size={22} color={color} />;
+  if (icon === "mc") return <MultipleChoiceIcon size={40} />;
+  if (icon === "dnd") return <DragDropIcon size={40} />;
+  if (icon === "cam") return <CameraIcon size={40} />;
+  if (icon === "badge") return <BadgeGalleryIcon size={40} />;
   return null;
 }
 
@@ -140,11 +267,9 @@ export default function Dashboard({ nav, user }) {
       {/* ══ COMBINED HERO + LEVEL CARD ══ */}
       <div style={{ margin: "0 16px 14px" }}>
         <GlassCard style={{ padding: "18px 20px 16px", position: "relative", overflow: "hidden" }}>
-          {/* bg accent circle */}
           <div style={{ position: "absolute", top: -40, right: -40, width: 180, height: 180, borderRadius: "50%", background: "rgba(37,99,235,0.06)", pointerEvents: "none" }} />
           <div style={{ position: "absolute", bottom: -30, left: -20, width: 110, height: 110, borderRadius: "50%", background: "rgba(37,99,235,0.04)", pointerEvents: "none" }} />
 
-          {/* Top row: greeting + senya */}
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
             <div style={{ flex: 1, paddingRight: 8 }}>
               <p style={{ color: "#4b7bbb", fontSize: 13, fontWeight: 600 }}>{getGreeting()}</p>
@@ -152,7 +277,6 @@ export default function Dashboard({ nav, user }) {
                 Hello, {user?.name || "Maria"}!
               </h1>
 
-              {/* Badges row */}
               <div style={{ display: "flex", gap: 6, marginTop: 8, flexWrap: "wrap" }}>
                 <span style={{ background: "rgba(15,49,114,0.10)", borderRadius: 8, padding: "4px 10px", fontSize: 11, fontWeight: 700, color: "#0f3172", display: "flex", alignItems: "center", gap: 4 }}>
                   <StarIcon size={12} color="#fbbf24" /> Beginner
@@ -164,7 +288,6 @@ export default function Dashboard({ nav, user }) {
               </div>
             </div>
 
-            {/* Senya — fixed size, no layout impact */}
             <img
               src={senya_blue}
               alt="Senya"
@@ -182,14 +305,11 @@ export default function Dashboard({ nav, user }) {
             />
           </div>
 
-          {/* Divider */}
           <div style={{ height: 1, background: "rgba(15,49,114,0.08)", margin: "14px 0 12px" }} />
 
-          {/* Level + progress row */}
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            {/* Trophy */}
             <div style={{ width: 44, height: 44, borderRadius: 12, background: "rgba(251,191,36,0.15)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-              <TrophyIcon size={24} color="#fbbf24" />
+              <LevelOneIcon size={36} />
             </div>
 
             <div style={{ flex: 1 }}>
@@ -213,7 +333,7 @@ export default function Dashboard({ nav, user }) {
         </GlassCard>
       </div>
 
-      {/* ══ DAILY CHALLENGE — big & captivating ══ */}
+      {/* ══ DAILY CHALLENGE ══ */}
       <div style={{ margin: "0 16px 14px" }}>
         <PressableButton
           onClick={() => nav("quizmc")}
@@ -230,16 +350,13 @@ export default function Dashboard({ nav, user }) {
             position: "relative",
           }}
         >
-          {/* Decorative blobs */}
           <div style={{ position: "absolute", top: -28, right: -28, width: 120, height: 120, borderRadius: "50%", background: "rgba(255,255,255,0.06)", pointerEvents: "none" }} />
           <div style={{ position: "absolute", bottom: -20, left: 60, width: 90, height: 90, borderRadius: "50%", background: "rgba(255,255,255,0.05)", pointerEvents: "none" }} />
           <div style={{ position: "absolute", top: 20, right: 100, width: 40, height: 40, borderRadius: "50%", background: "rgba(255,255,255,0.04)", pointerEvents: "none" }} />
 
           <div style={{ padding: "20px 20px 18px" }}>
-            {/* Label row */}
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
               <div style={{ width: 28, height: 28, borderRadius: 8, background: "rgba(255,255,255,0.18)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                {/* Target/bullseye icon */}
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                   <circle cx="12" cy="12" r="10" stroke="#fff" strokeWidth="2"/>
                   <circle cx="12" cy="12" r="6"  stroke="rgba(255,255,255,0.6)" strokeWidth="2"/>
@@ -249,13 +366,11 @@ export default function Dashboard({ nav, user }) {
               <span style={{ fontSize: 11, fontWeight: 800, color: "rgba(255,255,255,0.75)", textTransform: "uppercase", letterSpacing: "0.08em" }}>
                 Daily Challenge
               </span>
-              {/* Bonus XP pill */}
               <span style={{ marginLeft: "auto", background: "rgba(251,191,36,0.25)", borderRadius: 99, padding: "3px 10px", fontSize: 11, fontWeight: 800, color: "#fde68a" }}>
                 +50 XP
               </span>
             </div>
 
-            {/* Main content row */}
             <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 12 }}>
               <div style={{ flex: 1 }}>
                 <p style={{ fontSize: 22, fontWeight: 800, color: "#fff", fontFamily: "var(--font-head)", lineHeight: 1.2, marginBottom: 6 }}>
@@ -265,28 +380,23 @@ export default function Dashboard({ nav, user }) {
                   Sign A through E and earn your daily streak bonus.
                 </p>
 
-                {/* Progress dots */}
                 <div style={{ display: "flex", gap: 5, marginTop: 12 }}>
                   {[1,2,3,4,5].map(n => (
                     <div key={n} style={{
                       width: 28, height: 6, borderRadius: 99,
                       background: n <= 2 ? "#fbbf24" : "rgba(255,255,255,0.2)",
-                      transition: "background 0.3s",
                     }} />
                   ))}
                 </div>
                 <p style={{ fontSize: 10, color: "rgba(255,255,255,0.5)", fontWeight: 600, marginTop: 5 }}>2 of 5 completed</p>
               </div>
 
-              {/* Big hand/sign illustration */}
               <div style={{ flexShrink: 0, display: "flex", flexDirection: "column", alignItems: "center", gap: 10 }}>
                 <div style={{ width: 72, height: 72, borderRadius: 20, background: "rgba(255,255,255,0.12)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  {/* Hand sign SVG */}
                   <svg width="42" height="42" viewBox="0 0 24 24" fill="none">
                     <path d="M6 3v12M6 3c0-1.1.9-2 2-2s2 .9 2 2v6M10 3v6M10 3c0-1.1.9-2 2-2s2 .9 2 2v6M14 5c0-1.1.9-2 2-2s2 .9 2 2v8c0 3.3-2.7 6-6 6H9a6 6 0 01-6-6V9c0-1.1.9-2 2-2s2 .9 2 2" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
                 </div>
-                {/* Go button */}
                 <div style={{ background: "#fbbf24", borderRadius: 12, padding: "9px 18px", display: "flex", alignItems: "center", gap: 6 }}>
                   <span style={{ color: "#78350f", fontWeight: 800, fontSize: 14 }}>Start</span>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#78350f" strokeWidth="2.5">
