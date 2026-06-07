@@ -1,150 +1,524 @@
+import { useState } from "react";
 import { senya_blue } from "./images";
 import BottomNav from "./BottomNav";
-import { FootprintIcon, StarIcon, FlameIcon, BrainIcon, SearchIcon, GreetingIcon, NumbersIcon, CalendarIcon, ZapIcon, LockIcon } from "./icons";
+import { ZapIcon, LockIcon, TrophyIcon, CheckIcon } from "./icons";
 
 const badges = [
-  { name: "First Step", icon: "foot", desc: "Complete your first lesson", earned: true, color: "#10B981", xp: 10 },
-  { name: "Alphabet Star", icon: "star", desc: "Learn all 26 FSL alphabet signs", earned: true, color: "#F59E0B", xp: 50 },
-  { name: "Streak Starter", icon: "flame", desc: "Practice 3 days in a row", earned: true, color: "#EF4444", xp: 20 },
-  { name: "Quiz Whiz", icon: "brain", desc: "Score 100% on any quiz", earned: false, color: "#8B5CF6", xp: 30 },
-  { name: "Sign Detective", icon: "search", desc: "Use gesture recognition 10 times", earned: false, color: "#3B82F6", xp: 40 },
-  { name: "Greeter", icon: "greet", desc: "Complete the Greetings module", earned: true, color: "#06B6D4", xp: 25 },
-  { name: "Number Ninja", icon: "num", desc: "Learn numbers 1–10", earned: false, color: "#F97316", xp: 35 },
-  { name: "Week Warrior", icon: "cal", desc: "7-day learning streak", earned: false, color: "#EC4899", xp: 60 },
+  { name: "First Step",     icon: "foot",   desc: "Complete your first lesson",          earned: true,  color: "#10B981", bg: "#D1FAE5", blush: "#6EE7B7", xp: 10  },
+  { name: "Alphabet Star",  icon: "star",   desc: "Learn all 26 FSL alphabet signs",     earned: true,  color: "#F59E0B", bg: "#FEF3C7", blush: "#FCD34D", xp: 50  },
+  { name: "Streak Starter", icon: "flame",  desc: "Practice 3 days in a row",            earned: true,  color: "#EF4444", bg: "#FEE2E2", blush: "#FCA5A5", xp: 20  },
+  { name: "Quiz Whiz",      icon: "brain",  desc: "Score 100% on any quiz",              earned: false, color: "#8B5CF6", bg: "#EDE9FE", blush: "#C4B5FD", xp: 30  },
+  { name: "Sign Detective", icon: "search", desc: "Use gesture recognition 10 times",    earned: false, color: "#2563EB", bg: "#DBEAFE", blush: "#93C5FD", xp: 40  },
+  { name: "Greeter",        icon: "greet",  desc: "Complete the Greetings module",       earned: true,  color: "#06B6D4", bg: "#CFFAFE", blush: "#67E8F9", xp: 25  },
+  { name: "Number Ninja",   icon: "num",    desc: "Learn numbers 1–10",                  earned: false, color: "#F97316", bg: "#FFEDD5", blush: "#FED7AA", xp: 35  },
+  { name: "Week Warrior",   icon: "cal",    desc: "7-day learning streak",               earned: false, color: "#EC4899", bg: "#FCE7F3", blush: "#FBCFE8", xp: 60  },
 ];
 
 const milestones = [
-  { label: "50 XP", done: true },
-  { label: "100 XP", done: true },
-  { label: "250 XP", done: true },
-  { label: "500 XP", done: false },
+  { label: "50 XP",   done: true  },
+  { label: "100 XP",  done: true  },
+  { label: "250 XP",  done: true  },
+  { label: "500 XP",  done: false },
   { label: "1000 XP", done: false },
 ];
 
-function BadgeIcon({ icon, size = 24, color }) {
-  switch (icon) {
-    case "foot": return <FootprintIcon size={size} color={color} />;
-    case "star": return <StarIcon size={size} color={color} />;
-    case "flame": return <FlameIcon size={size} color={color} />;
-    case "brain": return <BrainIcon size={size} color={color} />;
-    case "search": return <SearchIcon size={size} color={color} />;
-    case "greet": return <GreetingIcon size={size} color={color} />;
-    case "num": return <NumbersIcon size={size} color={color} />;
-    case "cal": return <CalendarIcon size={size} color={color} />;
-    default: return null;
-  }
+function TopBar() {
+  return (
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "52px 20px 0" }}>
+      <span style={{ color: "#0f3172", fontSize: 22, fontWeight: 800, letterSpacing: 2 }}>SEÑAS</span>
+      <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+        <button style={{ background: "none", border: "none", cursor: "pointer", padding: 2 }}>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4b7bbb" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="8" strokeWidth="3"/>
+            <line x1="12" y1="12" x2="12" y2="16"/>
+          </svg>
+        </button>
+        <div style={{ background: "rgba(255,255,255,0.7)", borderRadius: 20, padding: "5px 12px", display: "flex", alignItems: "center", gap: 5, color: "#0f3172", fontSize: 13, fontWeight: 700, boxShadow: "0 1px 4px rgba(0,0,0,0.08)" }}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="#fb923c">
+            <path d="M12 2c0 6-8 8-8 14a8 8 0 0016 0C20 10 12 8 12 2z"/>
+          </svg>
+          12
+        </div>
+        <button style={{ background: "none", border: "none", cursor: "pointer", padding: 2 }}>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4b7bbb" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+            <path d="M13.73 21a2 2 0 01-3.46 0"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function BadgeIcon({ icon, color, bg, blush, size = 56 }) {
+  const r = size / 2;
+  const rx = size * 0.35; // rounder corners
+
+  const icons = {
+    foot: (
+      <>
+        <ellipse cx={r - 8} cy={r + 1} rx="7" ry="9" fill={color} transform={`rotate(-12 ${r - 8} ${r + 1})`} />
+        <ellipse cx={r + 8} cy={r + 3} rx="6" ry="8.5" fill={color} transform={`rotate(10 ${r + 8} ${r + 3})`} />
+        <circle cx={r - 13} cy={r - 10} r="3.5" fill={color} />
+        <circle cx={r - 5}  cy={r - 13} r="3.5" fill={color} />
+        <circle cx={r + 4}  cy={r - 13} r="3.5" fill={color} />
+        <circle cx={r + 12} cy={r - 9}  r="3.5" fill={color} />
+        <ellipse cx={r - 14} cy={r + 18} rx="5" ry="3" fill={blush} opacity="0.6" />
+        <ellipse cx={r + 14} cy={r + 18} rx="5" ry="3" fill={blush} opacity="0.6" />
+      </>
+    ),
+    star: (
+      <>
+        <polygon
+          points={`${r},${r-16} ${r+3.5},${r-4} ${r+14},${r-4} ${r+5.5},${r+3} ${r+8.5},${r+14} ${r},${r+8} ${r-8.5},${r+14} ${r-5.5},${r+3} ${r-14},${r-4} ${r-3.5},${r-4}`}
+          fill={color}
+        />
+        <circle cx={r} cy={r - 1} r="5" fill={blush} opacity="0.55" />
+        <ellipse cx={r - 10} cy={r + 19} rx="5" ry="3" fill={blush} opacity="0.5" />
+        <ellipse cx={r + 10} cy={r + 19} rx="5" ry="3" fill={blush} opacity="0.5" />
+      </>
+    ),
+    flame: (
+      <>
+        <path
+          d={`M${r} ${r+18}C${r-11} ${r+18} ${r-16} ${r+10} ${r-13} ${r+2}C${r-11.5} ${r-3} ${r-8} ${r-6} ${r-8} ${r-6}C${r-8} ${r} ${r-5} ${r+2} ${r-5} ${r+2}C${r-5} ${r-6} ${r-2} ${r-15} ${r+3} ${r-18}C${r+2} ${r-10} ${r+6} ${r-7} ${r+7} ${r-2}C${r+8.5} ${r-7} ${r+6} ${r-12} ${r+8.5} ${r-12}C${r+13} ${r-7} ${r+13} ${r+3} ${r+11} ${r+8}C${r+9} ${r+13} ${r+5} ${r+18} ${r} ${r+18}Z`}
+          fill={color}
+        />
+        <path
+          d={`M${r} ${r+18}C${r-5} ${r+18} ${r-7} ${r+14} ${r-6} ${r+10}C${r-5.5} ${r+7} ${r-3.5} ${r+6} ${r-3.5} ${r+6}C${r-3.5} ${r+9} ${r-2} ${r+10} ${r-2} ${r+10}C${r-2} ${r+6} ${r-0.5} ${r+2} ${r+2} ${r+1}C${r+1.5} ${r+5} ${r+3.5} ${r+6.5} ${r+4} ${r+9}C${r+4.5} ${r+6.5} ${r+3.5} ${r+4} ${r+5} ${r+4}C${r+7} ${r+7} ${r+7} ${r+12} ${r+5} ${r+15}C${r+4} ${r+16.5} ${r+2} ${r+18} ${r} ${r+18}Z`}
+          fill="#FBBF24"
+        />
+        <ellipse cx={r - 14} cy={r + 20} rx="5" ry="3" fill={blush} opacity="0.5" />
+        <ellipse cx={r + 14} cy={r + 20} rx="5" ry="3" fill={blush} opacity="0.5" />
+      </>
+    ),
+    brain: (
+      <>
+        <path
+          d={`M${r-12} ${r+10}C${r-19} ${r+10} ${r-21} ${r+3} ${r-18} ${r-2}C${r-20} ${r-5} ${r-20} ${r-10} ${r-15} ${r-11}C${r-15} ${r-15} ${r-11} ${r-18} ${r-7} ${r-16}C${r-6} ${r-19} ${r-2} ${r-20} ${r} ${r-18}C${r+2} ${r-20} ${r+6} ${r-19} ${r+7} ${r-16}C${r+11} ${r-18} ${r+15} ${r-15} ${r+15} ${r-11}C${r+20} ${r-10} ${r+20} ${r-5} ${r+18} ${r-2}C${r+21} ${r+3} ${r+19} ${r+10} ${r+12} ${r+10}Z`}
+          fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+        />
+        <line x1={r} y1={r - 18} x2={r} y2={r + 10} stroke={color} strokeWidth="2" strokeLinecap="round" />
+        <path d={`M${r-16} ${r-4}C${r-13} ${r-1} ${r-10} ${r-2} ${r-9} ${r-5}`} stroke={color} strokeWidth="2" strokeLinecap="round" fill="none" />
+        <path d={`M${r+16} ${r-4}C${r+13} ${r-1} ${r+10} ${r-2} ${r+9} ${r-5}`} stroke={color} strokeWidth="2" strokeLinecap="round" fill="none" />
+        <ellipse cx={r - 13} cy={r + 18} rx="5" ry="3" fill={blush} opacity="0.5" />
+        <ellipse cx={r + 13} cy={r + 18} rx="5" ry="3" fill={blush} opacity="0.5" />
+      </>
+    ),
+    search: (
+      <>
+        <circle cx={r - 5} cy={r - 5} r="11" fill="none" stroke={color} strokeWidth="4" strokeLinecap="round" />
+        <circle cx={r - 5} cy={r - 5} r="5"  fill={blush} opacity="0.6" />
+        <line x1={r + 3} y1={r + 3} x2={r + 14} y2={r + 14} stroke={color} strokeWidth="5" strokeLinecap="round" />
+        <ellipse cx={r - 14} cy={r + 18} rx="5" ry="3" fill={blush} opacity="0.5" />
+        <ellipse cx={r + 14} cy={r + 18} rx="5" ry="3" fill={blush} opacity="0.5" />
+      </>
+    ),
+    greet: (
+      <>
+        <path d={`M${r-6} ${r+14}C${r-14} ${r+12} ${r-18} ${r+4} ${r-16} ${r-4}L${r-15} ${r-12}C${r-15} ${r-14} ${r-13} ${r-15} ${r-11.5} ${r-13.5}L${r-11} ${r-8}`} stroke={color} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+        <path d={`M${r-11} ${r-8}L${r-12.5} ${r-18}C${r-13} ${r-20} ${r-11} ${r-21} ${r-10} ${r-19.5}L${r-7} ${r-10}`} stroke={color} strokeWidth="3" strokeLinecap="round" fill="none" />
+        <path d={`M${r-7} ${r-10}L${r-8} ${r-19}C${r-8.5} ${r-21} ${r-6} ${r-22} ${r-5} ${r-20}L${r-3} ${r-11}`} stroke={color} strokeWidth="3" strokeLinecap="round" fill="none" />
+        <path d={`M${r-3} ${r-11}L${r-3} ${r-19}C${r-3} ${r-20.5} ${r-0.5} ${r-21} ${r} ${r-19}L${r+1} ${r-11}`} stroke={color} strokeWidth="3" strokeLinecap="round" fill="none" />
+        <path d={`M${r+1} ${r-11}L${r+2} ${r-17.5}C${r+2.5} ${r-20} ${r+4.5} ${r-19.5} ${r+4.5} ${r-18}L${r+4} ${r-8}C${r+7} ${r-8} ${r+10} ${r-5} ${r+10} ${r-1}C${r+10} ${r+5} ${r+6} ${r+10} ${r+2} ${r+11}L${r-6} ${r+14}`} stroke={color} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+        <ellipse cx={r - 14} cy={r + 20} rx="5" ry="3" fill={blush} opacity="0.5" />
+        <ellipse cx={r + 14} cy={r + 20} rx="5" ry="3" fill={blush} opacity="0.5" />
+      </>
+    ),
+    num: (
+      <>
+        <rect x={r - 20} y={r - 16} width="16" height="20" rx="5" fill={color} />
+        <text x={r - 12} y={r - 1} fontSize="12" fontWeight="800" fill="white" textAnchor="middle" fontFamily="sans-serif">1</text>
+        <rect x={r - 8}  y={r - 10} width="16" height="20" rx="5" fill={color} />
+        <text x={r}      y={r + 5}  fontSize="12" fontWeight="800" fill="white" textAnchor="middle" fontFamily="sans-serif">2</text>
+        <rect x={r + 4}  y={r - 18} width="16" height="20" rx="5" fill={color} />
+        <text x={r + 12} y={r - 3}  fontSize="12" fontWeight="800" fill="white" textAnchor="middle" fontFamily="sans-serif">3</text>
+        <ellipse cx={r - 12} cy={r + 20} rx="5" ry="3" fill={blush} opacity="0.6" />
+        <ellipse cx={r + 12} cy={r + 20} rx="5" ry="3" fill={blush} opacity="0.6" />
+      </>
+    ),
+    cal: (
+      <>
+        <rect x={r - 20} y={r - 14} width="40" height="30" rx="8" fill="none" stroke={color} strokeWidth="2.5" />
+        <line x1={r - 20} y1={r - 5} x2={r + 20} y2={r - 5} stroke={color} strokeWidth="2" />
+        <line x1={r - 9} y1={r - 19} x2={r - 9} y2={r - 9} stroke={color} strokeWidth="3" strokeLinecap="round" />
+        <line x1={r + 9} y1={r - 19} x2={r + 9} y2={r - 9} stroke={color} strokeWidth="3" strokeLinecap="round" />
+        <circle cx={r - 13} cy={r + 3}  r="3" fill={color} />
+        <circle cx={r}      cy={r + 3}  r="3" fill={color} />
+        <circle cx={r + 13} cy={r + 3}  r="3" fill={color} />
+        <circle cx={r - 13} cy={r + 11} r="3" fill={color} />
+        <circle cx={r}      cy={r + 11} r="3" fill={color} />
+        <circle cx={r + 13} cy={r + 11} r="3" fill={color} />
+        <circle cx={r - 13} cy={r + 3}  r="3" fill={blush} opacity="0.5" />
+        <ellipse cx={r - 12} cy={r + 22} rx="5" ry="3" fill={blush} opacity="0.6" />
+        <ellipse cx={r + 12} cy={r + 22} rx="5" ry="3" fill={blush} opacity="0.6" />
+      </>
+    ),
+  };
+
+  return (
+    <div style={{ position: "relative", width: size, height: size, display: "flex", alignItems: "center", justifyContent: "center" }}>
+      {/* Outer glow */}
+      <div style={{
+        position: "absolute",
+        width: size + 6,
+        height: size + 6,
+        borderRadius: (size + 6) * 0.35,
+        background: `radial-gradient(circle, ${color}30 0%, ${color}00 70%)`,
+        filter: "blur(4px)",
+        zIndex: 0,
+      }} />
+      
+      {/* Main badge with inner shadow for dimension */}
+      <div style={{
+        position: "relative",
+        width: size,
+        height: size,
+        borderRadius: size * 0.35,
+        background: `linear-gradient(145deg, ${bg}, ${bg}cc)`,
+        boxShadow: `0 8px 16px -6px ${color}40, inset 0 2px 4px rgba(255,255,255,0.6), inset 0 -2px 4px rgba(0,0,0,0.05)`,
+        zIndex: 1,
+      }}>
+        <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} style={{ display: "block" }}>
+          <rect x="2" y="2" width={size - 4} height={size - 4} rx={size * 0.32} fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="1.5" />
+          {icons[icon]}
+        </svg>
+      </div>
+      
+      {/* Cute sparkling star */}
+      <div style={{
+        position: "absolute",
+        top: -4,
+        right: -4,
+        fontSize: 12,
+        filter: "drop-shadow(0 2px 2px rgba(0,0,0,0.1))",
+      }}>
+        ✨
+      </div>
+    </div>
+  );
+}
+
+function LockedBadgeIcon({ size = 56 }) {
+  const rx = size * 0.35;
+  return (
+    <div style={{ position: "relative", width: size, height: size, display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <div style={{
+        position: "absolute",
+        width: size + 6,
+        height: size + 6,
+        borderRadius: (size + 6) * 0.35,
+        background: "rgba(15,49,114,0.08)",
+        filter: "blur(3px)",
+      }} />
+      <div style={{
+        width: size,
+        height: size,
+        borderRadius: size * 0.35,
+        background: "linear-gradient(145deg, rgba(15,49,114,0.08), rgba(15,49,114,0.03))",
+        boxShadow: "inset 0 1px 2px rgba(255,255,255,0.4), inset 0 -1px 2px rgba(0,0,0,0.02)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}>
+        <svg width={size * 0.6} height={size * 0.6} viewBox="0 0 24 24" fill="none">
+          <rect x="7" y="11" width="10" height="10" rx="3" fill="rgba(15,49,114,0.15)" />
+          <path d="M9 11V9a3 3 0 0 1 6 0v2" stroke="rgba(15,49,114,0.25)" strokeWidth="2" strokeLinecap="round" fill="none" />
+          <circle cx="12" cy="16" r="1.5" fill="rgba(15,49,114,0.3)" />
+        </svg>
+      </div>
+      <div style={{
+        position: "absolute",
+        bottom: -3,
+        right: -2,
+        fontSize: 10,
+      }}>
+        🔒
+      </div>
+    </div>
+  );
+}
+
+function GlassCard({ children, style }) {
+  return (
+    <div style={{
+      background: "rgba(255,255,255,0.62)",
+      border: "1px solid rgba(255,255,255,0.85)",
+      borderRadius: 20,
+      backdropFilter: "blur(8px)",
+      boxShadow: "0 2px 12px rgba(15,49,114,0.09)",
+      ...style,
+    }}>
+      {children}
+    </div>
+  );
+}
+
+function PressableButton({ onClick, style, children, disabled }) {
+  const [pressed, setPressed] = useState(false);
+  return (
+    <button
+      onClick={onClick} disabled={disabled}
+      onMouseDown={() => setPressed(true)}
+      onMouseUp={() => setPressed(false)}
+      onMouseLeave={() => setPressed(false)}
+      onTouchStart={() => setPressed(true)}
+      onTouchEnd={() => setPressed(false)}
+      style={{ ...style, transform: pressed ? "scale(0.96)" : "scale(1)", transition: "transform 0.12s ease" }}
+    >
+      {children}
+    </button>
+  );
 }
 
 export default function Achievements({ nav, user }) {
-  const earned = badges.filter(b => b.earned).length;
+  const [filter, setFilter] = useState("all");
+  const earned   = badges.filter(b => b.earned).length;
+  const totalXP  = user?.xp || 340;
+  const xpToNext = 500 - totalXP;
+
+  const filtered = badges.filter(b =>
+    filter === "all"    ? true :
+    filter === "earned" ? b.earned :
+    !b.earned
+  );
 
   return (
-    <div className="screen" style={{ background: "#F9FAFB", paddingBottom: 80 }}>
-      {/* Header */}
-      <div style={{
-        background: "linear-gradient(135deg, #92400E, #F59E0B)",
-        padding: "52px 24px 32px", position: "relative", overflow: "hidden"
-      }}>
-        <div style={{
-          position: "absolute", top: -30, right: -30, width: 140, height: 140,
-          borderRadius: "50%", background: "rgba(255,255,255,0.07)"
-        }} />
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-          <div>
-            <h1 style={{ fontFamily: "var(--font-head)", fontSize: 26, fontWeight: 800, color: "#fff" }}>
-              Achievements
-            </h1>
-            <p style={{ color: "rgba(255,255,255,0.8)", fontSize: 14, marginTop: 4, fontWeight: 500 }}>
-              {earned} of {badges.length} badges earned
-            </p>
-            <div style={{
-              background: "rgba(255,255,255,0.15)", borderRadius: 10,
-              padding: "6px 14px", display: "inline-block", marginTop: 10
-            }}>
-              <span style={{ color: "#fff", fontWeight: 800, fontSize: 16, display: "flex", alignItems: "center", gap: 4 }}>
-                <ZapIcon size={16} color="#fff" /> {user?.xp || 340} Total XP
+    <div style={{
+      background: "linear-gradient(180deg,#a8d4f5 0%,#c5e3f7 25%,#daeefb 55%,#eaf5fd 80%,#f0f8ff 100%)",
+      minHeight: "100vh",
+      paddingBottom: 88,
+    }}>
+      <TopBar />
+
+      {/* ── Hero banner ── */}
+      <div style={{ margin: "14px 16px 0" }}>
+        <GlassCard style={{ padding: "18px 20px", position: "relative", overflow: "hidden" }}>
+          <div style={{ position: "absolute", top: -30, right: -30, width: 130, height: 130, borderRadius: "50%", background: "rgba(245,158,11,0.07)", pointerEvents: "none" }} />
+          <div style={{ position: "absolute", bottom: -20, left: 20, width: 80, height: 80, borderRadius: "50%", background: "rgba(37,99,235,0.05)", pointerEvents: "none" }} />
+
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+            <div style={{ flex: 1, paddingRight: 8 }}>
+              <p style={{ color: "#4b7bbb", fontSize: 12, fontWeight: 600, marginBottom: 2 }}>Your collection</p>
+              <h1 style={{ fontSize: 24, fontWeight: 800, color: "#0f3172", fontFamily: "var(--font-head)", lineHeight: 1.15, marginBottom: 10 }}>
+                Achievements
+              </h1>
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                <div style={{ background: "rgba(245,158,11,0.13)", borderRadius: 10, padding: "5px 12px", display: "flex", alignItems: "center", gap: 5 }}>
+                  <TrophyIcon size={14} color="#F59E0B" />
+                  <span style={{ fontSize: 12, fontWeight: 800, color: "#92400E" }}>{earned}/{badges.length} badges</span>
+                </div>
+                <div style={{ background: "rgba(37,99,235,0.10)", borderRadius: 10, padding: "5px 12px", display: "flex", alignItems: "center", gap: 5 }}>
+                  <ZapIcon size={14} color="#2563EB" />
+                  <span style={{ fontSize: 12, fontWeight: 800, color: "#1848c8" }}>{totalXP} XP</span>
+                </div>
+              </div>
+            </div>
+            <img
+              src={senya_blue}
+              alt="Senya"
+              onClick={() => nav("tutorial")}
+              style={{
+                width: 90, height: 90, objectFit: "contain",
+                filter: "drop-shadow(0 4px 12px rgba(15,49,114,0.16))",
+                animation: "senya-bob 2.5s ease-in-out infinite",
+                cursor: "pointer", flexShrink: 0,
+              }}
+            />
+          </div>
+        </GlassCard>
+      </div>
+
+      {/* ── XP Milestones ── */}
+      <div style={{ padding: "16px 16px 0" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+          <h2 style={{ fontSize: 16, fontWeight: 800, color: "#0f3172" }}>XP Milestones</h2>
+          <span style={{ fontSize: 11, fontWeight: 700, color: "#4b7bbb", background: "rgba(15,49,114,0.08)", borderRadius: 99, padding: "3px 10px" }}>
+            {xpToNext} XP to next
+          </span>
+        </div>
+
+        <GlassCard style={{ padding: "18px 16px" }}>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            {milestones.map((m, i) => (
+              <div key={i} style={{ display: "flex", alignItems: "center", flex: i < milestones.length - 1 ? 1 : 0 }}>
+                <div style={{
+                  width: 36, height: 36, borderRadius: "50%", flexShrink: 0,
+                  background: m.done ? "linear-gradient(135deg,#D97706,#F59E0B)" : "rgba(15,49,114,0.08)",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  boxShadow: m.done ? "0 3px 10px rgba(245,158,11,0.35)" : "none",
+                  border: m.done ? "none" : "2px solid rgba(15,49,114,0.15)",
+                  transition: "all 0.3s",
+                }}>
+                  {m.done
+                    ? <CheckIcon size={16} color="#fff" />
+                    : <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(15,49,114,0.3)" strokeWidth="2"><circle cx="12" cy="12" r="8"/></svg>
+                  }
+                </div>
+                {i < milestones.length - 1 && (
+                  <div style={{
+                    flex: 1, height: 4, borderRadius: 99,
+                    background: milestones[i + 1]?.done
+                      ? "linear-gradient(90deg,#F59E0B,#D97706)"
+                      : "rgba(15,49,114,0.10)",
+                    transition: "background 0.3s",
+                  }} />
+                )}
+              </div>
+            ))}
+          </div>
+
+          <div style={{ display: "flex", marginTop: 8 }}>
+            {milestones.map((m, i) => (
+              <span key={i} style={{
+                fontSize: 9, fontWeight: 700, textAlign: "center",
+                color: m.done ? "#92400E" : "#9CA3AF",
+                flex: i < milestones.length - 1 ? 1 : 0,
+                minWidth: 36,
+              }}>
+                {m.label}
               </span>
+            ))}
+          </div>
+
+          <div style={{ marginTop: 14 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 5 }}>
+              <span style={{ fontSize: 10, fontWeight: 700, color: "#4b7bbb", textTransform: "uppercase", letterSpacing: 0.8 }}>Current progress</span>
+              <span style={{ fontSize: 11, fontWeight: 800, color: "#0f3172" }}>{totalXP} / 500 XP</span>
+            </div>
+            <div style={{ background: "rgba(15,49,114,0.10)", borderRadius: 99, height: 8, overflow: "hidden" }}>
+              <div style={{ height: "100%", width: `${Math.min((totalXP / 500) * 100, 100)}%`, background: "linear-gradient(90deg,#fbbf24,#f59e0b)", borderRadius: 99, transition: "width 0.6s" }} />
             </div>
           </div>
-          <img src={senya_blue} alt="Senya" style={{
-            width: 72, height: 72, objectFit: "contain",
-            filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.2))",
-            animation: "senya-bob 2.5s ease-in-out infinite"
-          }} />
-        </div>
+        </GlassCard>
       </div>
 
-      {/* Milestones */}
-      <div style={{ padding: "20px 20px 0" }}>
-        <h3 style={{ fontFamily: "var(--font-head)", fontSize: 17, fontWeight: 800,
-          color: "#111827", marginBottom: 14 }}>XP Milestones</h3>
-        <div style={{ display: "flex", gap: 0, alignItems: "center" }}>
-          {milestones.map((m, i) => (
-            <div key={i} style={{ display: "flex", alignItems: "center", flex: i < milestones.length - 1 ? 1 : 0 }}>
-              <div style={{
-                width: 36, height: 36, borderRadius: "50%", flexShrink: 0,
-                background: m.done ? "#F59E0B" : "#E5E7EB",
-                display: "flex", alignItems: "center", justifyContent: "center",
-                boxShadow: m.done ? "0 2px 8px rgba(245,158,11,0.4)" : "none",
-                border: m.done ? "none" : "2px solid #D1D5DB"
-              }}>
-                {m.done ? <StarIcon size={18} color="#fff" /> : <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#D1D5DB" strokeWidth="2"><circle cx="12" cy="12" r="10" /></svg>}
-              </div>
-              {i < milestones.length - 1 && (
-                <div style={{
-                  height: 3, flex: 1,
-                  background: milestones[i+1]?.done ? "#F59E0B" : "#E5E7EB",
-                  transition: "background 0.3s"
-                }} />
-              )}
-            </div>
-          ))}
-        </div>
-        <div style={{ display: "flex", justifyContent: "space-between", marginTop: 6 }}>
-          {milestones.map((m, i) => (
-            <span key={i} style={{
-              fontSize: 10, fontWeight: 700,
-              color: m.done ? "#92400E" : "#9CA3AF",
-              flex: i < milestones.length - 1 ? 1 : 0,
-              textAlign: "center"
-            }}>{m.label}</span>
+      {/* ── Filter tabs ── */}
+      <div style={{ padding: "16px 16px 0" }}>
+        <div style={{ display: "flex", gap: 8 }}>
+          {[
+            { key: "all",    label: `All (${badges.length})` },
+            { key: "earned", label: `Earned (${earned})` },
+            { key: "locked", label: `Locked (${badges.length - earned})` },
+          ].map(tab => (
+            <PressableButton
+              key={tab.key}
+              onClick={() => setFilter(tab.key)}
+              style={{
+                flex: 1, padding: "9px 4px",
+                background: filter === tab.key ? "#1848c8" : "rgba(255,255,255,0.62)",
+                border: filter === tab.key ? "none" : "1px solid rgba(255,255,255,0.85)",
+                borderRadius: 12,
+                color: filter === tab.key ? "#fff" : "#4b7bbb",
+                fontSize: 12, fontWeight: 700, cursor: "pointer",
+                backdropFilter: "blur(8px)",
+                boxShadow: filter === tab.key ? "0 3px 12px rgba(15,49,114,0.25)" : "0 2px 8px rgba(15,49,114,0.07)",
+              }}
+            >
+              {tab.label}
+            </PressableButton>
           ))}
         </div>
       </div>
 
-      {/* Badges Grid */}
-      <div style={{ padding: "20px 20px 0" }}>
-        <h3 style={{ fontFamily: "var(--font-head)", fontSize: 17, fontWeight: 800,
-          color: "#111827", marginBottom: 14 }}>Badges</h3>
+      {/* ── Badges grid ── */}
+      <div style={{ padding: "14px 16px 0" }}>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-          {badges.map((b, i) => (
-            <div key={i} className="card" style={{
-              padding: 16, opacity: b.earned ? 1 : 0.6,
-              filter: b.earned ? "none" : "grayscale(0.5)",
-              position: "relative", overflow: "hidden"
-            }}>
+          {filtered.map((b, i) => (
+            <GlassCard
+              key={i}
+              style={{
+                padding: 16,
+                opacity: b.earned ? 1 : 0.72,
+                position: "relative",
+                overflow: "hidden",
+                transition: "opacity 0.2s",
+              }}
+            >
+              {/* Earned ribbon */}
               {b.earned && (
                 <div style={{
-                  position: "absolute", top: 8, right: 8,
-                  background: "#10B981", borderRadius: 6, padding: "2px 6px",
-                  fontSize: 10, fontWeight: 700, color: "#fff"
-                }}>✓ Earned</div>
+                  position: "absolute", top: 0, right: 0,
+                  background: "linear-gradient(135deg,#059669,#10B981)",
+                  borderRadius: "0 20px 0 12px",
+                  padding: "4px 10px",
+                  fontSize: 9, fontWeight: 800, color: "#fff",
+                  letterSpacing: 0.5,
+                }}>
+                  ✓ EARNED
+                </div>
               )}
-              <div style={{
-                width: 52, height: 52, borderRadius: 14,
-                background: b.earned ? `${b.color}18` : "#F3F4F6",
-                display: "flex", alignItems: "center",
-                justifyContent: "center", marginBottom: 10
-              }}>
-                {b.earned ? <BadgeIcon icon={b.icon} size={28} color={b.color} /> : <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" strokeWidth="2"><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>}
+
+              {/* Badge icon */}
+              <div style={{ marginBottom: 10, display: "flex", justifyContent: "center" }}>
+                {b.earned
+                  ? <BadgeIcon icon={b.icon} color={b.color} bg={b.bg} blush={b.blush} size={56} />
+                  : <LockedBadgeIcon size={56} />
+                }
               </div>
-              <p style={{ fontFamily: "var(--font-head)", fontSize: 14, fontWeight: 800,
-                color: b.earned ? "#111827" : "#9CA3AF" }}>{b.name}</p>
-              <p style={{ fontSize: 11, color: "#6B7280", marginTop: 3, lineHeight: 1.4 }}>{b.desc}</p>
-              <p style={{ fontSize: 11, color: b.earned ? b.color : "#9CA3AF",
-                fontWeight: 700, marginTop: 6 }}>+{b.xp} XP</p>
-            </div>
+
+              <p style={{ fontSize: 13, fontWeight: 800, color: b.earned ? "#0f3172" : "#9CA3AF", marginBottom: 3, lineHeight: 1.2 }}>
+                {b.name}
+              </p>
+              <p style={{ fontSize: 10.5, color: "#6B7280", lineHeight: 1.45, marginBottom: 8 }}>
+                {b.desc}
+              </p>
+
+              <div style={{
+                display: "inline-flex", alignItems: "center", gap: 4,
+                background: b.earned ? `${b.color}15` : "rgba(15,49,114,0.06)",
+                borderRadius: 99, padding: "3px 10px",
+              }}>
+                <ZapIcon size={11} color={b.earned ? b.color : "#9CA3AF"} />
+                <span style={{ fontSize: 11, fontWeight: 800, color: b.earned ? b.color : "#9CA3AF" }}>
+                  +{b.xp} XP
+                </span>
+              </div>
+            </GlassCard>
           ))}
+        </div>
+
+        {filtered.length === 0 && (
+          <GlassCard style={{ padding: "32px 20px", textAlign: "center", marginTop: 0 }}>
+            <div style={{ fontSize: 40, marginBottom: 10 }}>🔍</div>
+            <p style={{ fontSize: 14, fontWeight: 700, color: "#0f3172", marginBottom: 4 }}>No badges here yet</p>
+            <p style={{ fontSize: 12, color: "#6B7280" }}>Keep learning to unlock more!</p>
+          </GlassCard>
+        )}
+      </div>
+
+      {/* ── Motivational footer card ── */}
+      <div style={{ padding: "16px 16px 0" }}>
+        <div style={{
+          background: "linear-gradient(135deg,#1035a0,#1848c8,#2563EB)",
+          borderRadius: 20, padding: "18px 20px",
+          display: "flex", alignItems: "center", gap: 14,
+          boxShadow: "0 6px 20px rgba(15,49,114,0.28)",
+          position: "relative", overflow: "hidden",
+        }}>
+          <div style={{ position: "absolute", top: -20, right: -20, width: 100, height: 100, borderRadius: "50%", background: "rgba(255,255,255,0.05)" }} />
+          <div style={{ width: 46, height: 46, borderRadius: 13, background: "rgba(255,255,255,0.15)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+            <TrophyIcon size={24} color="#fbbf24" />
+          </div>
+          <div style={{ flex: 1 }}>
+            <p style={{ fontSize: 14, fontWeight: 800, color: "#fff", marginBottom: 2 }}>
+              {badges.length - earned} badges left to unlock!
+            </p>
+            <p style={{ fontSize: 11, color: "rgba(255,255,255,0.65)" }}>
+              Keep practicing to earn them all.
+            </p>
+          </div>
+          <PressableButton
+            onClick={() => nav("lessons")}
+            style={{
+              background: "#fbbf24", border: "none", borderRadius: 12,
+              padding: "9px 14px", color: "#78350f",
+              fontSize: 12, fontWeight: 800, cursor: "pointer", flexShrink: 0,
+            }}
+          >
+            Practice →
+          </PressableButton>
         </div>
       </div>
 

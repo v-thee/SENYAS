@@ -1,135 +1,307 @@
 import { useState } from "react";
 import { senya_logo } from "./images";
 
+// Local icon replacements (small, self-contained SVGs)
+function Mail({ size = 18, color = "currentColor" }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.5">
+      <path d="M3 7v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7" />
+      <path d="M21 7l-9 6L3 7" />
+    </svg>
+  );
+}
+
+function Lock({ size = 18, color = "currentColor" }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.5">
+      <rect x="3" y="11" width="18" height="10" rx="2" />
+      <path d="M7 11V8a5 5 0 0 1 10 0v3" />
+    </svg>
+  );
+}
+
+function GraduationCap({ size = 20, color = "currentColor" }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.5">
+      <path d="M12 2L1 7l11 5 9-4.09V17" />
+      <path d="M21 7v6" />
+      <path d="M7 21h10" />
+    </svg>
+  );
+}
+
+function ChevronRight({ size = 18, color = "currentColor" }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="9 18 15 12 9 6" />
+    </svg>
+  );
+}
+
 export default function Login({ nav, setUser }) {
-  const [mode, setMode] = useState("login");
   const [email, setEmail] = useState("");
   const [pw, setPw] = useState("");
-  const [name, setName] = useState("");
 
   const handle = () => {
-    if (setUser && name) setUser(u => ({ ...u, name }));
+    if (setUser) setUser(u => ({ ...u, name: "Student" }));
     nav("assessment");
   };
 
   return (
     <div className="screen" style={{
-      background: "linear-gradient(180deg, #EFF6FF 0%, #F9FAFB 40%)"
+      background: "#F0F4F8",
+      minHeight: "100vh",
+      position: "relative"
     }}>
-      {/* Header art */}
+      {/* Minimalist subtle gradient overlay */}
       <div style={{
-        padding: "48px 0 0", display: "flex", flexDirection: "column",
-        alignItems: "center", gap: 8
-      }}>
-        <img src={senya_logo} alt="Senya" style={{
-          width: 90, height: 90, objectFit: "contain",
-          filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.12))",
-          animation: "senya-bob 2.5s ease-in-out infinite"
-        }} />
-        <div style={{ textAlign: "center" }}>
-          <h1 style={{ fontFamily: "var(--font-head)", fontSize: 26, fontWeight: 800, color: "#111827" }}>
+        position: "absolute",
+        inset: 0,
+        background: "radial-gradient(circle at 20% 80%, rgba(30, 79, 138, 0.03) 0%, rgba(255,255,255,0) 70%)",
+        pointerEvents: "none"
+      }} />
+
+      {/* Content */}
+      <div style={{ position: "relative", zIndex: 2 }}>
+        {/* Header: Logo & Title */}
+        <div style={{
+          padding: "40px 24px 20px 24px",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: 4
+        }}>
+          <div style={{
+            background: "rgba(30, 79, 138, 0.08)",
+            borderRadius: 60,
+            padding: 12,
+            marginBottom: 8
+          }}>
+            <img src={senya_logo} alt="Senya" style={{
+              width: 64,
+              height: 64,
+              objectFit: "contain"
+            }} />
+          </div>
+          <h1 style={{
+            fontFamily: "var(--font-head)",
+            fontSize: 32,
+            fontWeight: 800,
+            letterSpacing: -0.5,
+            color: "#1A2C3E",
+            marginTop: 8,
+            marginBottom: 0
+          }}>
             SEÑAS
           </h1>
-          <p style={{ fontSize: 13, color: "#6B7280", fontWeight: 500 }}>Filipino Sign Language Learning</p>
-        </div>
-      </div>
-
-      {/* Card */}
-      <div style={{ flex: 1, padding: "24px 24px 48px" }}>
-        <div className="card" style={{ padding: 24 }}>
-          {/* Tab */}
-          <div style={{
-            display: "flex", background: "#F3F4F6", borderRadius: 12,
-            padding: 4, marginBottom: 24
+          <p style={{
+            fontSize: 12,
+            color: "#6B7C8E",
+            fontWeight: 500,
+            marginTop: 2
           }}>
-            {["login", "signup"].map(m => (
-              <button key={m} onClick={() => setMode(m)} style={{
-                flex: 1, padding: "10px 0", border: "none",
-                borderRadius: 10, cursor: "pointer",
-                fontFamily: "var(--font-body)", fontSize: 14, fontWeight: 700,
-                background: mode === m ? "#fff" : "transparent",
-                color: mode === m ? "#1D4ED8" : "#6B7280",
-                boxShadow: mode === m ? "0 2px 6px rgba(0,0,0,0.08)" : "none",
-                transition: "all 0.2s"
+            Filipino Sign Language Learning
+          </p>
+        </div>
+
+        {/* Main card */}
+        <div style={{ padding: "20px 20px 32px" }}>
+          <div style={{
+            background: "#FFFFFF",
+            borderRadius: 32,
+            padding: "28px 24px",
+            boxShadow: "0 4px 20px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.03)",
+            border: "1px solid #E8EDF2"
+          }}>
+            {/* Friendly teacher note card */}
+            <div style={{
+              background: "#FFF8ED",
+              borderRadius: 20,
+              padding: "14px 18px",
+              marginBottom: 28,
+              border: "1px solid #FFE8CC",
+              display: "flex",
+              alignItems: "center",
+              gap: 12
+            }}>
+              <div style={{
+                background: "rgba(255, 200, 100, 0.15)",
+                borderRadius: 40,
+                padding: 8,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center"
               }}>
-                {m === "login" ? "Sign In" : "Sign Up"}
-              </button>
-            ))}
-          </div>
+                <GraduationCap size={22} color="#D4891A" />
+              </div>
+              <div>
+                <p style={{
+                  margin: 0,
+                  fontSize: 13,
+                  fontWeight: 600,
+                  color: "#C47A1A"
+                }}>
+                  Did your teacher give you a code?
+                </p>
+                <p style={{
+                  margin: "4px 0 0",
+                  fontSize: 12,
+                  color: "#9B6A1A",
+                  lineHeight: 1.4
+                }}>
+                  Use your special email and password from class to sign in! ✨
+                </p>
+              </div>
+            </div>
 
-          {/* Fields */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-            {mode === "signup" && (
-              <Field label="Full Name" value={name} onChange={setName}
-                placeholder="e.g. Maria Santos" type="text" icon="👤" />
-            )}
-            <Field label="Email" value={email} onChange={setEmail}
-              placeholder="your@email.com" type="email" icon="✉️" />
-            <Field label="Password" value={pw} onChange={setPw}
-              placeholder="••••••••" type="password" icon="🔒" />
+            {/* Input fields */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+              <Field 
+                label="Email" 
+                value={email} 
+                onChange={setEmail}
+                placeholder="your@email.com" 
+                type="email" 
+                icon={<Mail size={18} />}
+              />
+              <Field 
+                label="Password" 
+                value={pw} 
+                onChange={setPw}
+                placeholder="••••••••" 
+                type="password" 
+                icon={<Lock size={18} />}
+              />
 
-            {mode === "login" && (
-              <div style={{ textAlign: "right" }}>
-                <button style={{ background: "none", border: "none", color: "#3B82F6",
-                  fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "var(--font-body)" }}>
-                  Forgot password?
+              <div style={{ textAlign: "right", marginTop: -4 }}>
+                <button style={{
+                  background: "none",
+                  border: "none",
+                  color: "#1E4F8A",
+                  fontSize: 12,
+                  fontWeight: 600,
+                  cursor: "pointer",
+                  fontFamily: "var(--font-body)"
+                }}>
+                  Forgot password? Ask your teacher 🧑‍🏫
                 </button>
               </div>
-            )}
+            </div>
+
+            {/* Primary CTA */}
+            <button
+              onClick={handle}
+              style={{
+                marginTop: 28,
+                background: "#1E4F8A",
+                padding: "14px 0",
+                borderRadius: 60,
+                fontWeight: 700,
+                fontSize: 16,
+                color: "white",
+                border: "none",
+                width: "100%",
+                cursor: "pointer",
+                fontFamily: "var(--font-body)",
+                transition: "all 0.2s",
+                boxShadow: "0 2px 8px rgba(30,79,138,0.2)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 8
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.background = "#0F3D69";
+                e.currentTarget.style.transform = "scale(1.01)";
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.background = "#1E4F8A";
+                e.currentTarget.style.transform = "scale(1)";
+              }}
+            >
+              Sign in
+              <ChevronRight size={18} />
+            </button>
           </div>
 
-          <button className="btn-primary" style={{ marginTop: 24 }} onClick={handle}>
-            {mode === "login" ? "Sign In" : "Create Account"}
-          </button>
-
-          {/* Divider */}
-          <div style={{ display: "flex", alignItems: "center", gap: 12, margin: "20px 0" }}>
-            <div style={{ flex: 1, height: 1, background: "#E5E7EB" }} />
-            <span style={{ fontSize: 12, color: "#9CA3AF", fontWeight: 600 }}>or continue with</span>
-            <div style={{ flex: 1, height: 1, background: "#E5E7EB" }} />
-          </div>
-
-          <div style={{ display: "flex", gap: 12 }}>
-            {["Google", "Facebook"].map(p => (
-              <button key={p} style={{
-                flex: 1, padding: "12px 0", border: "1.5px solid #E5E7EB",
-                borderRadius: 12, background: "#fff", cursor: "pointer",
-                fontSize: 13, fontWeight: 700, color: "#374151",
-                fontFamily: "var(--font-body)", transition: "all 0.15s"
-              }}>{p === "Google" ? "🔵 " : "🔷 "}{p}</button>
-            ))}
-          </div>
+          <p style={{
+            textAlign: "center",
+            marginTop: 24,
+            fontSize: 11,
+            color: "#8A9AAA",
+            lineHeight: 1.5
+          }}>
+            By signing in, you agree to our{" "}
+            <span style={{ color: "#1E4F8A", fontWeight: 600, cursor: "pointer" }}>Terms</span> and{" "}
+            <span style={{ color: "#1E4F8A", fontWeight: 600, cursor: "pointer" }}>Privacy Policy</span>
+          </p>
         </div>
-
-        <p style={{ textAlign: "center", marginTop: 20, fontSize: 12, color: "#9CA3AF", lineHeight: 1.6 }}>
-          By signing up, you agree to our{" "}
-          <span style={{ color: "#3B82F6", fontWeight: 600 }}>Terms of Service</span> and{" "}
-          <span style={{ color: "#3B82F6", fontWeight: 600 }}>Privacy Policy</span>
-        </p>
       </div>
     </div>
   );
 }
 
 function Field({ label, value, onChange, placeholder, type, icon }) {
+  const [isFocused, setIsFocused] = useState(false);
+
   return (
     <div>
-      <label style={{ fontSize: 12, fontWeight: 700, color: "#374151",
-        marginBottom: 6, display: "block" }}>{label}</label>
-      <div style={{ position: "relative" }}>
-        <span style={{ position: "absolute", left: 14, top: "50%",
-          transform: "translateY(-50%)", fontSize: 16 }}>{icon}</span>
+      <label style={{
+        fontSize: 12,
+        fontWeight: 600,
+        color: "#4A5C6E",
+        marginBottom: 6,
+        display: "block",
+        letterSpacing: 0.3
+      }}>
+        {label}
+      </label>
+      <div 
+        style={{ 
+          position: "relative",
+          cursor: "text"
+        }}
+        onClick={(e) => {
+          // Focus the input when clicking anywhere in the container
+          const input = e.currentTarget.querySelector('input');
+          if (input) input.focus();
+        }}
+      >
+        <div style={{
+          position: "absolute",
+          left: 16,
+          top: "50%",
+          transform: "translateY(-50%)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          color: isFocused ? "#1E4F8A" : "#9AABB8",
+          transition: "color 0.15s",
+          pointerEvents: "none",
+          zIndex: 1
+        }}>
+          {icon}
+        </div>
         <input
-          type={type} value={value} onChange={e => onChange(e.target.value)}
+          type={type}
+          value={value}
+          onChange={e => onChange(e.target.value)}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
           placeholder={placeholder}
           style={{
-            width: "100%", padding: "13px 14px 13px 42px",
-            border: "1.5px solid #E5E7EB", borderRadius: 12,
-            fontSize: 15, fontFamily: "var(--font-body)", color: "#111827",
-            background: "#FAFAFA", outline: "none", transition: "border 0.15s"
+            width: "100%",
+            padding: "14px 14px 14px 44px",
+            border: `1.5px solid ${isFocused ? "#1E4F8A" : "#DFE5EC"}`,
+            borderRadius: 60,
+            fontSize: 14,
+            fontFamily: "var(--font-body)",
+            color: "#1A2C3E",
+            background: "#FFFFFF",
+            outline: "none",
+            transition: "all 0.15s",
+            boxShadow: isFocused ? "0 0 0 3px rgba(30,79,138,0.1)" : "none"
           }}
-          onFocus={e => e.target.style.borderColor = "#3B82F6"}
-          onBlur={e => e.target.style.borderColor = "#E5E7EB"}
         />
       </div>
     </div>
