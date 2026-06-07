@@ -38,13 +38,119 @@ function ChevronRight({ size = 18, color = "currentColor" }) {
   );
 }
 
+// PressableButton component for the modal
+function PressableButton({ onClick, style, children, disabled }) {
+  const [pressed, setPressed] = useState(false);
+  return (
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      onMouseDown={() => setPressed(true)}
+      onMouseUp={() => setPressed(false)}
+      onMouseLeave={() => setPressed(false)}
+      onTouchStart={() => setPressed(true)}
+      onTouchEnd={() => setPressed(false)}
+      style={{
+        ...style,
+        transform: pressed ? "scale(0.97)" : "scale(1)",
+        transition: "transform 0.12s ease",
+        cursor: disabled ? "not-allowed" : "pointer",
+        outline: "none",
+      }}
+    >
+      {children}
+    </button>
+  );
+}
+
+// Exit Confirmation Modal
+function ExitConfirmModal({ isOpen, onClose, onConfirm }) {
+  if (!isOpen) return null;
+
+  return (
+    <>
+      <div style={{
+        position: "fixed", inset: 0,
+        background: "rgba(0,0,0,0.45)",
+        backdropFilter: "blur(5px)",
+        zIndex: 1200,
+      }} onClick={onClose} />
+      <div style={{
+        position: "fixed", top: "50%", left: "50%",
+        transform: "translate(-50%, -50%)",
+        width: "88%", maxWidth: 340,
+        background: "rgba(255,255,255,0.97)",
+        backdropFilter: "blur(20px)",
+        borderRadius: 28,
+        padding: "28px 24px 24px",
+        zIndex: 1201,
+        boxShadow: "0 20px 48px rgba(0,0,0,0.18)",
+        border: "1px solid rgba(255,255,255,0.6)",
+        animation: "modalPopIn 0.3s cubic-bezier(0.34,1.3,0.64,1)",
+        textAlign: "center",
+      }} onClick={e => e.stopPropagation()}>
+        <div style={{
+          width: 60, height: 60, borderRadius: "50%",
+          background: "rgba(239,68,68,0.10)",
+          border: "1.5px solid rgba(239,68,68,0.18)",
+          display: "flex", alignItems: "center", justifyContent: "center",
+          margin: "0 auto 16px",
+        }}>
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#DC2626" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+            <polyline points="16 17 21 12 16 7"/>
+            <line x1="21" y1="12" x2="9" y2="12"/>
+          </svg>
+        </div>
+        <h3 style={{
+          fontSize: 20, fontWeight: 800, color: "#0f3172",
+          fontFamily: "var(--font-head)", marginBottom: 8,
+        }}>
+          Exit Login?
+        </h3>
+        <p style={{
+          fontSize: 13, color: "#6B7280", fontWeight: 500,
+          lineHeight: 1.55, marginBottom: 24,
+        }}>
+          You'll need to sign in again to continue your learning journey.
+        </p>
+        <div style={{ display: "flex", gap: 12 }}>
+          <PressableButton onClick={onClose} style={{
+            flex: 1, padding: "13px",
+            background: "rgba(15,49,114,0.07)",
+            border: "1px solid rgba(15,49,114,0.10)",
+            borderRadius: 40, fontSize: 14, fontWeight: 700,
+            color: "#0f3172",
+          }}>
+            Stay
+          </PressableButton>
+          <PressableButton onClick={onConfirm} style={{
+            flex: 1.3, padding: "13px",
+            background: "linear-gradient(135deg, #DC2626, #EF4444)",
+            border: "none", borderRadius: 40,
+            fontSize: 14, fontWeight: 700, color: "#fff",
+            boxShadow: "0 4px 14px rgba(220,38,38,0.3)",
+          }}>
+            Exit
+          </PressableButton>
+        </div>
+      </div>
+    </>
+  );
+}
+
 export default function Login({ nav, setUser }) {
   const [email, setEmail] = useState("");
   const [pw, setPw] = useState("");
+  const [showExitConfirm, setShowExitConfirm] = useState(false);
 
   const handle = () => {
     if (setUser) setUser(u => ({ ...u, name: "Student" }));
     nav("assessment");
+  };
+
+  const handleExit = () => {
+    setShowExitConfirm(true);
   };
 
   return (
@@ -53,6 +159,16 @@ export default function Login({ nav, setUser }) {
       minHeight: "100vh",
       position: "relative"
     }}>
+      {/* Exit Confirmation Modal */}
+      <ExitConfirmModal 
+        isOpen={showExitConfirm}
+        onClose={() => setShowExitConfirm(false)}
+        onConfirm={() => {
+          setShowExitConfirm(false);
+          nav("onboarding");
+        }}
+      />
+
       {/* Minimalist subtle gradient overlay */}
       <div style={{
         position: "absolute",
@@ -237,6 +353,19 @@ export default function Login({ nav, setUser }) {
           </p>
         </div>
       </div>
+
+      <style>{`
+        @keyframes modalPopIn {
+          from {
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.9);
+          }
+          to {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+          }
+        }
+      `}</style>
     </div>
   );
 }
@@ -262,7 +391,6 @@ function Field({ label, value, onChange, placeholder, type, icon }) {
           cursor: "text"
         }}
         onClick={(e) => {
-          // Focus the input when clicking anywhere in the container
           const input = e.currentTarget.querySelector('input');
           if (input) input.focus();
         }}

@@ -72,6 +72,20 @@ const questions = [
   },
 ];
 
+// Sample student data for rankings
+const STUDENT_RANKINGS = [
+  { name: "Maria Santos", score: 50, rank: 1, avatar: "MS", isCurrentUser: false },
+  { name: "Juan Dela Cruz", score: 48, rank: 2, avatar: "JD", isCurrentUser: false },
+  { name: "Jose Rizal", score: 45, rank: 3, avatar: "JR", isCurrentUser: false },
+  { name: "Andres Bonifacio", score: 42, rank: 4, avatar: "AB", isCurrentUser: false },
+  { name: "Gabriela Silang", score: 40, rank: 5, avatar: "GS", isCurrentUser: false },
+  { name: "Lapu-Lapu", score: 38, rank: 6, avatar: "LL", isCurrentUser: false },
+  { name: "Emilio Aguinaldo", score: 35, rank: 7, avatar: "EA", isCurrentUser: false },
+  { name: "Melchora Aquino", score: 32, rank: 8, avatar: "MA", isCurrentUser: false },
+  { name: "Antonio Luna", score: 28, rank: 9, avatar: "AL", isCurrentUser: false },
+  { name: "Gregorio Del Pilar", score: 25, rank: 10, avatar: "GD", isCurrentUser: true },
+];
+
 /* ══ HELPERS ═══════════════════════════════════════════════════════════ */
 const Icon = {
   ArrowRight: (p) => <svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>,
@@ -98,14 +112,117 @@ const Icon = {
   Target:     (p) => <svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>,
   Dumbbell:   (p) => <svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 5v14"/><path d="M18 5v14"/><path d="M4 7h4"/><path d="M4 17h4"/><path d="M16 7h4"/><path d="M16 17h4"/><path d="M6 12h12"/></svg>,
   Brain:      (p) => <svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.46 2.5 2.5 0 0 1-1.98-3.13A3 3 0 0 1 5 13V9a3 3 0 0 1 .56-1.78 2.5 2.5 0 0 1 3.94-3z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.46 2.5 2.5 0 0 0 1.98-3.13A3 3 0 0 0 19 13V9a3 3 0 0 0-.56-1.78 2.5 2.5 0 0 0-3.94-3z"/></svg>,
+  Crown:      (p) => <svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 4L7 9L12 4L17 9L22 4L19 20H5L2 4Z"/><circle cx="5" cy="5" r="1" fill="currentColor"/><circle cx="12" cy="5" r="1" fill="currentColor"/><circle cx="19" cy="5" r="1" fill="currentColor"/></svg>,
+  Medal:      (p) => <svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 15C15.866 15 19 11.866 19 8C19 4.13401 15.866 1 12 1C8.13401 1 5 4.13401 5 8C5 11.866 8.13401 15 12 15Z"/><path d="M12 15V23"/><path d="M9 21L12 18L15 21"/></svg>,
 };
+
+// PressableButton component for modal
+function PressableButton({ onClick, style, children, disabled }) {
+  const [pressed, setPressed] = useState(false);
+  return (
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      onMouseDown={() => setPressed(true)}
+      onMouseUp={() => setPressed(false)}
+      onMouseLeave={() => setPressed(false)}
+      onTouchStart={() => setPressed(true)}
+      onTouchEnd={() => setPressed(false)}
+      style={{
+        ...style,
+        transform: pressed ? "scale(0.97)" : "scale(1)",
+        transition: "transform 0.12s ease",
+        cursor: disabled ? "not-allowed" : "pointer",
+        outline: "none",
+      }}
+    >
+      {children}
+    </button>
+  );
+}
+
+// Exit Confirmation Modal
+function ExitConfirmModal({ isOpen, onClose, onConfirm }) {
+  if (!isOpen) return null;
+
+  return (
+    <>
+      <div style={{
+        position: "fixed", inset: 0,
+        background: "rgba(0,0,0,0.45)",
+        backdropFilter: "blur(5px)",
+        zIndex: 1200,
+      }} onClick={onClose} />
+      <div style={{
+        position: "fixed", top: "50%", left: "50%",
+        transform: "translate(-50%, -50%)",
+        width: "88%", maxWidth: 340,
+        background: "rgba(255,255,255,0.97)",
+        backdropFilter: "blur(20px)",
+        borderRadius: 28,
+        padding: "28px 24px 24px",
+        zIndex: 1201,
+        boxShadow: "0 20px 48px rgba(0,0,0,0.18)",
+        border: "1px solid rgba(255,255,255,0.6)",
+        animation: "modalPopIn 0.3s cubic-bezier(0.34,1.3,0.64,1)",
+        textAlign: "center",
+      }} onClick={e => e.stopPropagation()}>
+        <div style={{
+          width: 60, height: 60, borderRadius: "50%",
+          background: "rgba(239,68,68,0.10)",
+          border: "1.5px solid rgba(239,68,68,0.18)",
+          display: "flex", alignItems: "center", justifyContent: "center",
+          margin: "0 auto 16px",
+        }}>
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#DC2626" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+            <polyline points="16 17 21 12 16 7"/>
+            <line x1="21" y1="12" x2="9" y2="12"/>
+          </svg>
+        </div>
+        <h3 style={{
+          fontSize: 20, fontWeight: 800, color: "#0f3172",
+          fontFamily: "var(--font-head)", marginBottom: 8,
+        }}>
+          Exit Quiz?
+        </h3>
+        <p style={{
+          fontSize: 13, color: "#6B7280", fontWeight: 500,
+          lineHeight: 1.55, marginBottom: 24,
+        }}>
+          Your progress will be lost. Are you sure you want to exit?
+        </p>
+        <div style={{ display: "flex", gap: 12 }}>
+          <PressableButton onClick={onClose} style={{
+            flex: 1, padding: "13px",
+            background: "rgba(15,49,114,0.07)",
+            border: "1px solid rgba(15,49,114,0.10)",
+            borderRadius: 40, fontSize: 14, fontWeight: 700,
+            color: "#0f3172",
+          }}>
+            Stay
+          </PressableButton>
+          <PressableButton onClick={onConfirm} style={{
+            flex: 1.3, padding: "13px",
+            background: "linear-gradient(135deg, #DC2626, #EF4444)",
+            border: "none", borderRadius: 40,
+            fontSize: 14, fontWeight: 700, color: "#fff",
+            boxShadow: "0 4px 14px rgba(220,38,38,0.3)",
+          }}>
+            Exit
+          </PressableButton>
+        </div>
+      </div>
+    </>
+  );
+}
 
 const SlideIcon = ({ iconKey, color, size = 40 }) => {
   const C = Icon[iconKey];
   return C ? <C width={size} height={size} style={{ color }} /> : null;
 };
 
-function TopBar({ nav, showExit = false }) {
+function TopBar({ nav, showExit = false, onExitClick }) {
   return (
     <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"52px 20px 0" }}>
       <span style={{ color:"#0f3172", fontSize:22, fontWeight:800, letterSpacing:2 }}>SEÑAS</span>
@@ -122,7 +239,7 @@ function TopBar({ nav, showExit = false }) {
         </button>
         {showExit && (
           <button
-            onClick={() => nav && nav("dashboard")}
+            onClick={onExitClick}
             style={{
               background:"rgba(255,255,255,0.7)",
               border:"1px solid rgba(255,255,255,0.85)",
@@ -268,9 +385,19 @@ function DynamicIcon({ iconName, size = 14, color = "#1848c8" }) {
 
 function ModuleScreen({ onStart, nav }) {
   const [slide, setSlide] = useState(0);
+  const [showExitConfirm, setShowExitConfirm] = useState(false);
   const current = MODULE_SLIDES[slide];
   const isLast  = slide === MODULE_SLIDES.length - 1;
   const tip     = SenyaTips[slide];
+
+  const handleExit = () => {
+    setShowExitConfirm(true);
+  };
+
+  const handleConfirmExit = () => {
+    setShowExitConfirm(false);
+    nav("dashboard");
+  };
 
   return (
     <div style={{
@@ -278,7 +405,12 @@ function ModuleScreen({ onStart, nav }) {
       background:"linear-gradient(180deg,#a8d4f5 0%,#c5e3f7 25%,#daeefb 55%,#eaf5fd 80%,#f0f8ff 100%)",
       display:"flex", flexDirection:"column", paddingBottom:32,
     }}>
-      <TopBar nav={nav} showExit={true} />
+      <ExitConfirmModal 
+        isOpen={showExitConfirm}
+        onClose={() => setShowExitConfirm(false)}
+        onConfirm={handleConfirmExit}
+      />
+      <TopBar nav={nav} showExit={true} onExitClick={handleExit} />
 
       {/* Hero */}
       <div style={{ margin:"14px 16px 0" }}>
@@ -477,6 +609,7 @@ function QuizScreen({ onDone, nav }) {
   const [revealed, setRev]  = useState(false);
   const [score, setScore]   = useState(0);
   const [showAnim, setAnim] = useState(false);
+  const [showExitConfirm, setShowExitConfirm] = useState(false);
 
   const q         = questions[qi];
   const isCorrect = selected === q.correct;
@@ -492,10 +625,25 @@ function QuizScreen({ onDone, nav }) {
     else setAnim(true);
   };
 
+  const handleExit = () => {
+    setShowExitConfirm(true);
+  };
+
+  const handleConfirmExit = () => {
+    setShowExitConfirm(false);
+    nav("dashboard");
+  };
+
   return (
     <div style={{ position:"relative", minHeight:"100vh",
       background:"linear-gradient(180deg,#a8d4f5 0%,#c5e3f7 25%,#daeefb 55%,#eaf5fd 80%,#f0f8ff 100%)",
       display:"flex", flexDirection:"column", paddingBottom:28 }}>
+
+      <ExitConfirmModal 
+        isOpen={showExitConfirm}
+        onClose={() => setShowExitConfirm(false)}
+        onConfirm={handleConfirmExit}
+      />
 
       {showAnim && (
         <TransitionAnim
@@ -505,7 +653,7 @@ function QuizScreen({ onDone, nav }) {
         />
       )}
 
-      <TopBar nav={nav} showExit={true} />
+      <TopBar nav={nav} showExit={true} onExitClick={handleExit} />
 
       {/* Progress */}
       <div style={{ padding:"14px 16px 0" }}>
@@ -570,7 +718,7 @@ function QuizScreen({ onDone, nav }) {
   );
 }
 
-/* ══ SCREEN 3: RESULT ══════════════════════════════════════════════════ */
+/* ══ SCREEN 3: RESULT WITH RANKINGS ═════════════════════════════════════ */
 const ResultMsgs = [
   { icon:"Sparkle", text:"Incredible! You answered everything perfectly. You're a true SEÑAS star!" },
   { icon:"Award",   text:"Amazing work! You're really getting the hang of FSL signs." },
@@ -584,6 +732,7 @@ function ResultScreen({ score, nav, onRetry }) {
   const xpEarned = score*10;
   const stars    = pct===100?3:pct>=80?2:pct>=50?1:0;
   const [stage, setStage] = useState(0);
+  const [showExitConfirm, setShowExitConfirm] = useState(false);
 
   useEffect(()=>{
     const t1=setTimeout(()=>setStage(1),200);
@@ -601,71 +750,216 @@ function ResultScreen({ score, nav, onRetry }) {
   const msg    = ResultMsgs[msgIdx];
   const MsgIcon = Icon[msg.icon];
 
+  // Get rank medal color
+  const getRankIcon = (rank) => {
+    if (rank === 1) return <Icon.Crown width={14} height={14} style={{ color: "#F59E0B" }} />;
+    if (rank === 2) return <Icon.Medal width={14} height={14} style={{ color: "#9CA3AF" }} />;
+    if (rank === 3) return <Icon.Medal width={14} height={14} style={{ color: "#CD7F32" }} />;
+    return <span style={{ fontSize: 12, fontWeight: 700, color: "#9CA3AF", width: 14, textAlign: "center" }}>{rank}</span>;
+  };
+
+  const handleExit = () => {
+    setShowExitConfirm(true);
+  };
+
+  const handleConfirmExit = () => {
+    setShowExitConfirm(false);
+    nav("dashboard");
+  };
+
   return (
     <div style={{
       minHeight:"100vh",
       background:"linear-gradient(160deg,#a8d4f5 0%,#c5e3f7 35%,#daeefb 65%,#f0f8ff 100%)",
       display:"flex", flexDirection:"column",
     }}>
-      <TopBar nav={nav} showExit={false} />
+      <ExitConfirmModal 
+        isOpen={showExitConfirm}
+        onClose={() => setShowExitConfirm(false)}
+        onConfirm={handleConfirmExit}
+      />
+      <TopBar nav={nav} showExit={true} onExitClick={handleExit} />
       <div style={{ flex:1, display:"flex", alignItems:"center", justifyContent:"center", padding:20, position:"relative" }}>
         {stage>=1 && <Confetti count={36} />}
 
-        <GlassCard style={{ padding:"32px 24px", maxWidth:360, width:"100%", textAlign:"center", position:"relative", overflow:"hidden" }}>
+        <div style={{ maxWidth: 360, width: "100%" }}>
+          {/* Result Card */}
+          <GlassCard style={{ padding:"32px 24px", textAlign:"center", position:"relative", overflow:"hidden", marginBottom: 16 }}>
 
-          <img src={senya_teaching} alt="Senya" style={{
-            width:100, height:100, objectFit:"contain",
-            filter:"drop-shadow(0 5px 16px rgba(15,49,114,0.18))",
-            animation:stage>=1?"senyaJump 0.6s cubic-bezier(0.34,1.5,0.64,1)":"none",
-            marginBottom:4,
-          }} />
+            <img src={senya_teaching} alt="Senya" style={{
+              width:100, height:100, objectFit:"contain",
+              filter:"drop-shadow(0 5px 16px rgba(15,49,114,0.18))",
+              animation:stage>=1?"senyaJump 0.6s cubic-bezier(0.34,1.5,0.64,1)":"none",
+              marginBottom:4,
+            }} />
 
-          <div style={{ animation:stage>=2?"trophyBounce 0.7s cubic-bezier(0.34,1.2,0.64,1) 0.2s both":"none", marginBottom:8 }}>
-            <Icon.Trophy width={48} height={48} style={{ color:"#fbbf24" }} />
-          </div>
+            <div style={{ animation:stage>=2?"trophyBounce 0.7s cubic-bezier(0.34,1.2,0.64,1) 0.2s both":"none", marginBottom:8 }}>
+              <Icon.Trophy width={48} height={48} style={{ color:"#fbbf24" }} />
+            </div>
 
-          <div style={{ display:"flex", justifyContent:"center", gap:6, marginBottom:10 }}>
-            {[0,1,2].map(i=>(
-              <div key={i} style={{ animation:i<stars?`starPop 0.4s cubic-bezier(0.34,1.4,0.64,1) ${0.3+i*0.12}s both`:"none" }}>
-                <Icon.Star width={28} height={28} style={{ fill:i<stars?"#fbbf24":"#E5E7EB", stroke:i<stars?"#F59E0B":"#E5E7EB" }} />
-              </div>
-            ))}
-          </div>
+            <div style={{ display:"flex", justifyContent:"center", gap:6, marginBottom:10 }}>
+              {[0,1,2].map(i=>(
+                <div key={i} style={{ animation:i<stars?`starPop 0.4s cubic-bezier(0.34,1.4,0.64,1) ${0.3+i*0.12}s both`:"none" }}>
+                  <Icon.Star width={28} height={28} style={{ fill:i<stars?"#fbbf24":"#E5E7EB", stroke:i<stars?"#F59E0B":"#E5E7EB" }} />
+                </div>
+              ))}
+            </div>
 
-          <h2 style={{ fontSize:24, fontWeight:800, color, marginBottom:4, fontFamily:"var(--font-head)" }}>{label}</h2>
+            <h2 style={{ fontSize:24, fontWeight:800, color, marginBottom:4, fontFamily:"var(--font-head)" }}>{label}</h2>
 
-          <div style={{ display:"flex", alignItems:"center", margin:"16px 0", background:"rgba(15,49,114,0.05)", borderRadius:16, overflow:"hidden" }}>
-            {[
-              { val:pct+"%",    sub:"Accuracy" },
-              { val:`${score}/${total}`, sub:"Correct"  },
-              { val:xpEarned,   sub:"XP earned", color:"#F59E0B" },
-            ].map((s,i)=>(
-              <div key={i} style={{ flex:1, padding:"14px 8px", textAlign:"center", borderRight:i<2?"1px solid rgba(15,49,114,0.08)":"none" }}>
-                <p style={{ fontSize:28, fontWeight:900, color:s.color||"#0f3172", lineHeight:1 }}>{s.val}</p>
-                <p style={{ fontSize:11, color:"#4b7bbb", fontWeight:600, marginTop:2 }}>{s.sub}</p>
-              </div>
-            ))}
-          </div>
+            <div style={{ display:"flex", alignItems:"center", margin:"16px 0", background:"rgba(15,49,114,0.05)", borderRadius:16, overflow:"hidden" }}>
+              {[
+                { val:pct+"%",    sub:"Accuracy" },
+                { val:`${score}/${total}`, sub:"Correct"  },
+                { val:xpEarned,   sub:"XP earned", color:"#F59E0B" },
+              ].map((s,i)=>(
+                <div key={i} style={{ flex:1, padding:"14px 8px", textAlign:"center", borderRight:i<2?"1px solid rgba(15,49,114,0.08)":"none" }}>
+                  <p style={{ fontSize:28, fontWeight:900, color:s.color||"#0f3172", lineHeight:1 }}>{s.val}</p>
+                  <p style={{ fontSize:11, color:"#4b7bbb", fontWeight:600, marginTop:2 }}>{s.sub}</p>
+                </div>
+              ))}
+            </div>
 
-          <div style={{ background:"rgba(15,49,114,0.05)", borderRadius:14, padding:"12px 14px", marginBottom:20, textAlign:"left", display:"flex", gap:10, alignItems:"flex-start" }}>
-            <img src={senya_logo} alt="Senya" style={{ width:36, height:36, objectFit:"contain", flexShrink:0 }} />
-            <div style={{ flex:1 }}>
-              <div style={{ display:"flex", alignItems:"center", gap:5, marginBottom:4 }}>
-                {MsgIcon && <MsgIcon width={13} height={13} style={{ color:color, flexShrink:0 }} />}
-                <p style={{ fontSize:12.5, color:"#0f3172", lineHeight:1.55, margin:0, fontWeight:500 }}>{msg.text}</p>
+            <div style={{ background:"rgba(15,49,114,0.05)", borderRadius:14, padding:"12px 14px", marginBottom:0, textAlign:"left", display:"flex", gap:10, alignItems:"flex-start" }}>
+              <img src={senya_logo} alt="Senya" style={{ width:36, height:36, objectFit:"contain", flexShrink:0 }} />
+              <div style={{ flex:1 }}>
+                <div style={{ display:"flex", alignItems:"center", gap:5, marginBottom:4 }}>
+                  {MsgIcon && <MsgIcon width={13} height={13} style={{ color:color, flexShrink:0 }} />}
+                  <p style={{ fontSize:12.5, color:"#0f3172", lineHeight:1.55, margin:0, fontWeight:500 }}>{msg.text}</p>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div style={{ display:"flex", gap:10 }}>
-            <Btn onClick={()=>nav("dashboard")} variant="ghost" style={{ flex:1, padding:"13px" }}>
-              <Icon.Home width={15} height={15} style={{ color:"#0f3172" }} /> Home
-            </Btn>
-            <Btn onClick={onRetry} variant="primary" style={{ flex:1.4, padding:"13px" }}>
-              <Icon.Refresh width={15} height={15} style={{ color:"#fff" }} /> Try Again
-            </Btn>
-          </div>
-        </GlassCard>
+            <div style={{ display:"flex", gap:10, marginTop: 20 }}>
+              <Btn onClick={()=>nav("dashboard")} variant="ghost" style={{ flex:1, padding:"13px" }}>
+                <Icon.Home width={15} height={15} style={{ color:"#0f3172" }} /> Home
+              </Btn>
+              <Btn onClick={onRetry} variant="primary" style={{ flex:1.4, padding:"13px" }}>
+                <Icon.Refresh width={15} height={15} style={{ color:"#fff" }} /> Try Again
+              </Btn>
+            </div>
+          </GlassCard>
+
+          {/* Rankings Section */}
+          <GlassCard style={{ padding:"20px 20px", marginBottom: 20 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
+              <Icon.Award width={20} height={20} style={{ color: "#F59E0B" }} />
+              <h3 style={{ fontSize: 16, fontWeight: 800, color: "#0f3172", margin: 0 }}>Class Rankings</h3>
+              <span style={{ fontSize: 10, fontWeight: 600, color: "#4b7bbb", background: "rgba(15,49,114,0.08)", borderRadius: 99, padding: "3px 8px", marginLeft: "auto" }}>
+                Top 10
+              </span>
+            </div>
+
+            {/* Table header */}
+            <div style={{
+              display: "grid",
+              gridTemplateColumns: "48px 1fr 64px",
+              padding: "8px 0",
+              borderBottom: "1px solid rgba(15,49,114,0.08)",
+              marginBottom: 8,
+              fontSize: 10,
+              fontWeight: 700,
+              color: "#4b7bbb",
+              textTransform: "uppercase",
+              letterSpacing: 0.5,
+            }}>
+              <span>Rank</span>
+              <span>Student</span>
+              <span style={{ textAlign: "right" }}>Score</span>
+            </div>
+
+            {/* Rankings list */}
+            <div>
+              {STUDENT_RANKINGS.map((student) => (
+                <div
+                  key={student.rank}
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "48px 1fr 64px",
+                    alignItems: "center",
+                    padding: "10px 0",
+                    borderRadius: 10,
+                    background: student.isCurrentUser ? "rgba(37,99,235,0.08)" : "transparent",
+                    transition: "background 0.2s",
+                    borderBottom: student.rank !== STUDENT_RANKINGS.length ? "1px solid rgba(15,49,114,0.04)" : "none",
+                  }}
+                >
+                  <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                    {getRankIcon(student.rank)}
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <div style={{
+                      width: 28,
+                      height: 28,
+                      borderRadius: 99,
+                      background: student.isCurrentUser ? "#2563EB" : "rgba(15,49,114,0.10)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontSize: 11,
+                      fontWeight: 700,
+                      color: student.isCurrentUser ? "#fff" : "#4b7bbb",
+                    }}>
+                      {student.avatar}
+                    </div>
+                    <span style={{
+                      fontSize: 13,
+                      fontWeight: student.isCurrentUser ? 800 : 600,
+                      color: student.isCurrentUser ? "#2563EB" : "#0f3172",
+                    }}>
+                      {student.name}
+                      {student.isCurrentUser && (
+                        <span style={{
+                          fontSize: 9,
+                          fontWeight: 600,
+                          color: "#2563EB",
+                          background: "rgba(37,99,235,0.12)",
+                          borderRadius: 99,
+                          padding: "2px 6px",
+                          marginLeft: 8,
+                        }}>You</span>
+                      )}
+                    </span>
+                  </div>
+                  <div style={{
+                    textAlign: "right",
+                    fontWeight: student.isCurrentUser ? 800 : 600,
+                    color: student.isCurrentUser ? "#2563EB" : "#0f3172",
+                  }}>
+                    {student.score}
+                    <span style={{ fontSize: 9, color: "#9CA3AF", marginLeft: 2 }}>pts</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* User's rank highlight */}
+            <div style={{
+              marginTop: 16,
+              padding: "12px 0 8px",
+              borderTop: "1px solid rgba(15,49,114,0.08)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                <Icon.Target width={14} height={14} style={{ color: "#2563EB" }} />
+                <span style={{ fontSize: 11, fontWeight: 600, color: "#4b7bbb" }}>Your Position</span>
+              </div>
+              <div style={{
+                background: "rgba(37,99,235,0.10)",
+                borderRadius: 99,
+                padding: "4px 12px",
+                display: "flex",
+                alignItems: "center",
+                gap: 4,
+              }}>
+                <span style={{ fontSize: 11, fontWeight: 800, color: "#2563EB" }}>#{STUDENT_RANKINGS.find(s => s.isCurrentUser)?.rank}</span>
+                <span style={{ fontSize: 10, color: "#4b7bbb" }}>out of {STUDENT_RANKINGS.length}</span>
+              </div>
+            </div>
+          </GlassCard>
+        </div>
       </div>
     </div>
   );
@@ -703,5 +997,9 @@ _s.textContent = `
   @keyframes starPop      { 0%{transform:scale(0) rotate(-30deg);opacity:0} 100%{transform:scale(1) rotate(0);opacity:1} }
   @keyframes confettiBurst{ 0%{transform:translate(0,0) rotate(0deg);opacity:1} 100%{transform:translate(var(--dx),var(--dy)) rotate(540deg);opacity:0} }
   @keyframes floatUp      { 0%,100%{transform:translateY(0);opacity:0.5} 50%{transform:translateY(-20px);opacity:0.8} }
+  @keyframes modalPopIn {
+    from { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
+    to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  }
 `;
 if (!document.head.querySelector("#quizmc-styles")) document.head.appendChild(_s);
