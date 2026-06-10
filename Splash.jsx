@@ -2,8 +2,11 @@ import { useEffect } from "react";
 import { senya_logo } from "./images";
 
 export default function Splash({ nav }) {
+  // Auto-advance to onboarding after 3s, but keep tap-to-continue for users.
   useEffect(() => {
-    const t = setTimeout(() => nav("onboarding"), 2200);
+    const t = setTimeout(() => {
+      nav && nav("onboarding");
+    }, 3000);
     return () => clearTimeout(t);
   }, [nav]);
 
@@ -49,19 +52,7 @@ export default function Splash({ nav }) {
         </p>
       </div>
 
-      {/* Loading dots */}
-      <div style={{
-        display: "flex", gap: 8, marginTop: 48,
-        animation: "fadeIn 0.4s ease 1.2s both"
-      }}>
-        {[0, 1, 2].map(i => (
-          <div key={i} style={{
-            width: 8, height: 8, borderRadius: "50%",
-            background: "rgba(255,255,255,0.5)",
-            animation: `dotBounce 1s ease-in-out ${i * 0.2}s infinite`
-          }} />
-        ))}
-      </div>
+      {/* Static splash — auto-advances after 3s (no tap) */}
 
       <style>{`
         @keyframes splashPop {

@@ -1,8 +1,8 @@
 import { useState } from "react";
 import "./App.css";
 
-import Splash from "./Splash";
-import Onboarding from "./Onboarding";
+import SplashScreen from "./SplashScreen";
+import AppOnboarding from "./AppOnboarding";
 import Login from "./Login";
 import Assessment from "./Assessment";
 import Dashboard from "./Dashboard";
@@ -21,8 +21,8 @@ export default function App() {
   const nav = (s) => setScreen(s);
 
   const screens = {
-    splash:       <Splash nav={nav} />,
-    onboarding:   <Onboarding nav={nav} />,
+    splash:       <SplashScreen onDone={() => nav("onboarding")} />,
+    onboarding:   <AppOnboarding onComplete={() => nav("login")} />,
     login:        <Login nav={nav} setUser={setUser} />,
     assessment:   <Assessment nav={nav} />,
     dashboard:    <Dashboard nav={nav} user={user} />,
