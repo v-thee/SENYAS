@@ -2,11 +2,13 @@ import { useState } from "react";
 import { senya_logo } from "./images";
 
 // Local icon replacements (small, self-contained SVGs)
-function Mail({ size = 18, color = "currentColor" }) {
+function IdCard({ size = 18, color = "currentColor" }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.5">
-      <path d="M3 7v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7" />
-      <path d="M21 7l-9 6L3 7" />
+      <rect x="2" y="4" width="20" height="16" rx="2" />
+      <path d="M8 10h8" />
+      <path d="M8 14h5" />
+      <circle cx="16" cy="14" r="2" />
     </svg>
   );
 }
@@ -140,7 +142,7 @@ function ExitConfirmModal({ isOpen, onClose, onConfirm }) {
 }
 
 export default function Login({ nav, setUser }) {
-  const [email, setEmail] = useState("");
+  const [lrn, setLrn] = useState("");
   const [pw, setPw] = useState("");
   const [showExitConfirm, setShowExitConfirm] = useState(false);
 
@@ -257,7 +259,7 @@ export default function Login({ nav, setUser }) {
                   fontWeight: 600,
                   color: "#C47A1A"
                 }}>
-                  Did your teacher give you a code?
+                  Need your LRN?
                 </p>
                 <p style={{
                   margin: "4px 0 0",
@@ -265,7 +267,7 @@ export default function Login({ nav, setUser }) {
                   color: "#9B6A1A",
                   lineHeight: 1.4
                 }}>
-                  Use your special email and password from class to sign in! ✨
+                  Your Learner Reference Number (LRN) is provided by your teacher. Ask them if you need help! ✨
                 </p>
               </div>
             </div>
@@ -273,12 +275,12 @@ export default function Login({ nav, setUser }) {
             {/* Input fields */}
             <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
               <Field 
-                label="Email" 
-                value={email} 
-                onChange={setEmail}
-                placeholder="your@email.com" 
-                type="email" 
-                icon={<Mail size={18} />}
+                label="Learner Reference Number (LRN)" 
+                value={lrn} 
+                onChange={setLrn}
+                placeholder="Enter your LRN (e.g.: 121544140011)" 
+                type="text" 
+                icon={<IdCard size={13} />}
               />
               <Field 
                 label="Password" 
