@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from "react";
 const SLIDES = [
   {
     id: 0,
-    senya: "./img/senya_blue.png",
+    senya: "./public/img/senya_blue.png",
     senyaStyle: { width:160, height:160, bottom:0, right:0 },
     accent: "#2563EB",
     accentLight: "rgba(37,99,235,0.10)",
@@ -15,7 +15,7 @@ const SLIDES = [
   },
   {
     id: 1,
-    senya: "./img/senya_teaching.png",
+    senya: "./public/img/senya_teaching.png",
     senyaStyle: { width:150, height:150, bottom:0, right:-8 },
     accent: "#059669",
     accentLight: "rgba(5,150,105,0.10)",
@@ -28,7 +28,7 @@ const SLIDES = [
   },
   {
     id: 2,
-    senya: "./img/senya_magnify.png",
+    senya: "./public/img/senya_magnify.png",
     senyaStyle: { width:155, height:155, bottom:0, right:-4 },
     accent: "#F59E0B",
     accentLight: "rgba(245,158,11,0.10)",
@@ -41,7 +41,7 @@ const SLIDES = [
   },
   {
     id: 3,
-    senya: "./img/senya_blue.png",
+    senya: "./public/img/senya_blue.png",
     senyaStyle: { width:160, height:160, bottom:0, right:0 },
     accent: "#8B5CF6",
     accentLight: "rgba(139,92,246,0.10)",
@@ -209,7 +209,7 @@ export default function OnboardingSlides({ onDone }) {
       {/* Senya speech bubble */}
       <div style={{ padding:"12px 16px 0", display:"flex", alignItems:"flex-end", gap:10,
         opacity:visible?1:0, transition:"opacity 0.3s ease 0.1s" }}>
-        <img src="./img/senyas_logo.png" alt="Senya"
+        <img src="./public/img/senyas_logo.png" alt="Senya"
           style={{ width:52, height:52, objectFit:"contain",
             animation:"senyaBob 2.8s ease-in-out infinite", flexShrink:0 }} />
         <GlassCard style={{ flex:1, padding:"10px 14px", borderRadius:"14px 14px 14px 4px",

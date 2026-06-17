@@ -56,7 +56,7 @@ function TopBar() {
 function BadgesGalleryIcon({ size = 40 }) {
   return (
     <img 
-      src={`/img/badges.png`}
+      src={`/public/img/badges.png`}
       alt="badges"
       width={size}
       height={size}

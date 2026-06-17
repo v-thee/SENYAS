@@ -19,7 +19,7 @@ const iconContainerStyle = {
 const PlantIcon = () => (
   <div style={iconContainerStyle}>
     <img 
-      src="/img/never.png"
+      src="/public/img/never.png"
       alt="never"
       width="44"
       height="44"
@@ -32,7 +32,7 @@ const PlantIcon = () => (
 const HandIcon = () => (
   <div style={iconContainerStyle}>
     <img 
-      src="/img/few.png"
+      src="/public/img/few.png"
       alt="few signs"
       width="44"
       height="44"
@@ -45,7 +45,7 @@ const HandIcon = () => (
 const ChatIcon = () => (
   <div style={iconContainerStyle}>
     <img 
-      src="/img/conversation.png"
+      src="/public/img/conversation.png"
       alt="conversation"
       width="44"
       height="44"
@@ -58,7 +58,7 @@ const ChatIcon = () => (
 const StarIcon = () => (
   <div style={iconContainerStyle}>
     <img 
-      src="/img/experienced.png"
+      src="/public/img/experienced.png"
       alt="experienced"
       width="44"
       height="44"
@@ -71,7 +71,7 @@ const StarIcon = () => (
 const AlphabetIcon = () => (
   <div style={iconContainerStyle}>
     <img 
-      src="/img/alphabet.png"
+      src="/public/img/alphabet.png"
       alt="alphabet"
       width="44"
       height="44"
@@ -84,7 +84,7 @@ const AlphabetIcon = () => (
 const GreetingIcon = () => (
   <div style={iconContainerStyle}>
     <img 
-      src="/img/greet.png"
+      src="/public/img/greet.png"
       alt="greeting"
       width="44"
       height="44"
@@ -97,7 +97,7 @@ const GreetingIcon = () => (
 const ClassroomIcon = () => (
   <div style={iconContainerStyle}>
     <img 
-      src="/img/classroom.png"
+      src="/public/img/classroom.png"
       alt="classroom"
       width="44"
       height="44"
@@ -110,7 +110,7 @@ const ClassroomIcon = () => (
 const BookIcon = () => (
   <div style={iconContainerStyle}>
     <img 
-      src="/img/everything.png"
+      src="/public/img/everything.png"
       alt="everything"
       width="44"
       height="44"
@@ -123,7 +123,7 @@ const BookIcon = () => (
 const TimerIcon = () => (
   <div style={iconContainerStyle}>
     <img 
-      src="/img/time.png"
+      src="/public/img/time.png"
       alt="time"
       width="44"
       height="44"
@@ -397,7 +397,7 @@ export default function Assessment({ nav }) {
                 boxShadow: "0 8px 20px rgba(16,185,129,0.3)"
               }}>
                 <img 
-                  src="/img/experienced.png"
+                  src="/public/img/experienced.png"
                   alt="star"
                   width="32"
                   height="32"

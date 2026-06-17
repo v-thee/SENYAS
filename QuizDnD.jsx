@@ -47,7 +47,7 @@ const Icon = {
 
 const EnergyIcon = ({ size = 16 }) => (
   <img 
-    src="/img/energy.png"
+    src="/public/img/energy.png"
     alt="energy"
     width={size}
     height={size}

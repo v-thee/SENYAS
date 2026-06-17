@@ -88,7 +88,7 @@ export default function RoleSelect({ onStudent }) {
             <div style={{ position:"absolute", inset:-20, borderRadius:"50%",
               background:"radial-gradient(circle,rgba(37,99,235,0.15) 0%,transparent 70%)",
               filter:"blur(10px)" }} />
-            <img src="./img/senya_blue.png" alt="Senya"
+            <img src="./public/img/senya_blue.png" alt="Senya"
               style={{ width:heroSize, height:heroSize, objectFit:"contain",
                 filter:"drop-shadow(0 8px 24px rgba(15,49,114,0.20))",
                 animation:"senyaBob 3s ease-in-out infinite", position:"relative" }} />
@@ -129,7 +129,7 @@ export default function RoleSelect({ onStudent }) {
             accentLight="rgba(37,99,235,0.08)"
             borderActive="#93C5FD"
             icon={
-              <img src="./img/student.png" alt="Student Senya"
+              <img src="./public/img/student.png" alt="Student Senya"
                 style={{ width:72, height:72, objectFit:"contain",
                   filter:"drop-shadow(0 4px 12px rgba(15,49,114,0.18))",
                   animation:"senyaBob 2.5s ease-in-out infinite" }} />
@@ -154,7 +154,7 @@ export default function RoleSelect({ onStudent }) {
             accentLight="rgba(5,150,105,0.08)"
             borderActive="#6EE7B7"
             icon={
-              <img src="./img/teacher.png" alt="Teacher Senya"
+              <img src="./public/img/teacher.png" alt="Teacher Senya"
                 style={{ width:72, height:72, objectFit:"contain",
                   filter:"drop-shadow(0 4px 12px rgba(5,150,105,0.20))",
                   animation:"senyaBob 2.8s ease-in-out infinite" }} />
@@ -216,7 +216,7 @@ export default function RoleSelect({ onStudent }) {
 
             {/* Senya */}
             <div style={{ textAlign:"center", marginBottom:16 }}>
-              <img src="./img/senyas_logo.png" alt="Senya"
+              <img src="./public/img/senyas_logo.png" alt="Senya"
                 style={{ width:80, height:80, objectFit:"contain",
                   filter:"drop-shadow(0 4px 14px rgba(15,49,114,0.15))",
                   animation:"senyaBob 2.5s ease-in-out infinite" }} />

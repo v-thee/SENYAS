@@ -28,7 +28,7 @@ const STUDENT_RANKINGS = [
 function AlphabetLessonImage({ size = 22 }) {
   return (
     <img 
-      src={`/img/alphabet.png`}
+      src={`/public/img/alphabet.png`}
       alt="Alphabet"
       width={size}
       height={size}
@@ -40,7 +40,7 @@ function AlphabetLessonImage({ size = 22 }) {
 function NumbersLessonImage({ size = 22 }) {
   return (
     <img 
-      src={`/img/numbers.png`}
+      src={`/public/img/numbers.png`}
       alt="Numbers"
       width={size}
       height={size}

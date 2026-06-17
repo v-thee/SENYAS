@@ -7,28 +7,28 @@ const tips = [
     title: "Hi, I'm Senya!",
     body: "I'm your friendly guide on this FSL learning journey. I'll be right here whenever you need help!",
     color: "#3B82F6",
-    iconImg: "/img/greet.png"
+    iconImg: "/public/img/greet.png"
   },
   {
     img: senya_teaching,
     title: "Watch & Learn",
     body: "Each lesson shows you how a sign looks. Watch carefully, then try it yourself!",
     color: "#F59E0B",
-    iconImg: "/img/lesson.png"
+    iconImg: "/public/img/lesson.png"
   },
   {
     img: senya_magnify,
     title: "Practice Makes Perfect",
     body: "Use the camera to practice your signs and get real-time feedback. Don't worry, you got this!",
     color: "#10B981",
-    iconImg: "/img/camera.png"
+    iconImg: "/public/img/camera.png"
   },
   {
     img: senya_blue,
     title: "Earn Badges!",
     body: "Complete lessons and quizzes to earn XP and unlock badges. Every sign learned is a victory!",
     color: "#8B5CF6",
-    iconImg: "/img/badges.png"
+    iconImg: "/public/img/badges.png"
   },
 ];
 

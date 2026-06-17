@@ -6,7 +6,7 @@ import BottomNav from "./BottomNav";
 function LessonIcon({ size = 20 }) {
   return (
     <img 
-      src="/img/lesson.png"
+      src="/public/img/lesson.png"
       alt="lessons"
       width={size}
       height={size}
@@ -18,7 +18,7 @@ function LessonIcon({ size = 20 }) {
 function EnergyIcon({ size = 20 }) {
   return (
     <img 
-      src="/img/energy.png"
+      src="/public/img/energy.png"
       alt="energy"
       width={size}
       height={size}
@@ -30,7 +30,7 @@ function EnergyIcon({ size = 20 }) {
 function StreakIcon({ size = 20 }) {
   return (
     <img 
-      src="/img/streak.png"
+      src="/public/img/streak.png"
       alt="streak"
       width={size}
       height={size}
@@ -42,7 +42,7 @@ function StreakIcon({ size = 20 }) {
 function BadgeIcon({ size = 20 }) {
   return (
     <img 
-      src="/img/badges.png"
+      src="/public/img/badges.png"
       alt="badges"
       width={size}
       height={size}
@@ -865,10 +865,10 @@ export default function Profile({ nav, user: initialUser }) {
           <GlassCard style={{ padding: 20 }}>
             <div style={{ display: "flex", justifyContent: "space-around", alignItems: "center" }}>
               {[
-                { src: "/img/first_step.png",     label: "First Step"     },
-                { src: "/img/alphabet_star.png",  label: "Alphabet Star"  },
-                { src: "/img/streak1.png",        label: "Streak Starter" },
-                { src: "/img/greetings.png",      label: "Greeter"        },
+                { src: "/public/img/first_step.png",     label: "First Step"     },
+                { src: "/public/img/alphabet_star.png",  label: "Alphabet Star"  },
+                { src: "/public/img/streak1.png",        label: "Streak Starter" },
+                { src: "/public/img/greetings.png",      label: "Greeter"        },
               ].map((b, i) => (
                 <div key={i} style={{ textAlign: "center" }}>
                   <img src={b.src} alt={b.label} width="48" height="48" style={{ borderRadius: 12 }} />

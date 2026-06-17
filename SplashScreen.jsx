@@ -70,7 +70,7 @@ export default function SplashScreen({ onDone }) {
           animation: "splashPulse 2.5s ease-in-out infinite",
         }} />
         <img
-          src="./img/senyas_logo.png"
+          src="./public/img/senyas_logo.png"
           alt="SEÑAS"
           style={{
             width: 130, height: 130, objectFit: "contain",

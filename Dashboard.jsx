@@ -29,7 +29,7 @@ function getGreeting() {
 
 // FSL Alphabet Icon using alphabets.png
 function AlphabetLessonIcon({ size = 44 }) {
-  const imgPath = `/img/alphabet.png`;
+  const imgPath = `/public/img/alphabet.png`;
   return (
     <img 
       src={imgPath}
@@ -47,7 +47,7 @@ function AlphabetLessonIcon({ size = 44 }) {
 
 // Greetings Icon using greet.png
 function GreetingsLessonIcon({ size = 44 }) {
-  const imgPath = `/img/greet.png`;
+  const imgPath = `/public/img/greet.png`;
   return (
     <img 
       src={imgPath}
@@ -65,7 +65,7 @@ function GreetingsLessonIcon({ size = 44 }) {
 
 // Numbers Icon using numbers.png
 function NumbersLessonIcon({ size = 44 }) {
-  const imgPath = `/img/numbers.png`;
+  const imgPath = `/public/img/numbers.png`;
   return (
     <img 
       src={imgPath}
@@ -93,7 +93,7 @@ function LessonIcon({ icon, size = 22 }) {
 
 // Multiple Choice Icon using multiple_choice.png
 function MultipleChoiceIcon({ size = 44 }) {
-  const imgPath = `/img/multiple_choice.png`;
+  const imgPath = `/public/img/multiple_choice.png`;
   return (
     <img 
       src={imgPath}
@@ -111,7 +111,7 @@ function MultipleChoiceIcon({ size = 44 }) {
 
 // Drag & Drop Icon using dragNdrop.png
 function DragDropIcon({ size = 44 }) {
-  const imgPath = `/img/dragNdrop.png`;
+  const imgPath = `/public/img/dragNdrop.png`;
   return (
     <img 
       src={imgPath}
@@ -129,7 +129,7 @@ function DragDropIcon({ size = 44 }) {
 
 // Gesture Cam Icon using camera.png
 function CameraIcon({ size = 44 }) {
-  const imgPath = `/img/camera.png`;
+  const imgPath = `/public/img/camera.png`;
   return (
     <img 
       src={imgPath}
@@ -147,7 +147,7 @@ function CameraIcon({ size = 44 }) {
 
 // Badge Gallery Icon Component (using badges.png)
 function BadgeGalleryIcon({ size = 44 }) {
-  const imgPath = `/img/badges.png`;
+  const imgPath = `/public/img/badges.png`;
   return (
     <img 
       src={imgPath}
@@ -165,7 +165,7 @@ function BadgeGalleryIcon({ size = 44 }) {
 
 // Level 1 Badge Icon Component (using level_1.png)
 function LevelOneIcon({ size = 44 }) {
-  const imgPath = `/img/level_1.png`;
+  const imgPath = `/public/img/level_1.png`;
   return (
     <img 
       src={imgPath}
